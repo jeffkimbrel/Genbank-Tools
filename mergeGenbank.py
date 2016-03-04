@@ -2,42 +2,21 @@ from Bio import SeqIO
 import re
 import os
 
-mappingFileHandle = "/Users/kimbrel1/Dropbox/LLNL/Genomes/NCBI/Phaeobacter_gallaeciensis_DSM_26640_uid232357/merged.gbk"
-RASTFileHandle = "/Users/kimbrel1/Dropbox/LLNL/Projects/Microalgae/Phaeobacter/Phaeobacter_26640_RAST_output_Genbank.gbk"
+masterGenbankFH = "/Users/kimbrel1/Dropbox/LLNL/Genomes/NCBI/Phaeobacter_gallaeciensis_DSM_26640_uid232357/merged.gbk"
+secondaryGenbankFH = "/Users/kimbrel1/Dropbox/LLNL/Projects/Microalgae/Phaeobacter/Phaeobacter_26640_RAST_output_Genbank.gbk"
+
 outputFolder = "/Users/kimbrel1/Dropbox/LLNL/Projects/Microalgae/Phaeobacter/results/output/"
 
 if not os.path.exists(outputFolder):
     os.makedirs(outputFolder)
     
-##### CLASSES #####
-
-class pfp:
-    pfpList = [] # Even though it doesn't look like it, this works. It does NOT make a new 'nameList' list with each instance.
-    
-    def __init__(self, name, location, product, ec, ecPath, kegg, go, signalP,chrome,locus_tag):
-        pfp.pfpList.append(self)
-        self.name = name
-        self.location = location
-        self.chrome = chrome
-        self.product = product
-        self.ec = list(set(ec))
-        self.ecPath = list(set(ecPath))
-        self.kegg = list(set(kegg))
-        self.go = list(set(go))
-        self.signalP = signalP
-        self.locus_tag = locus_tag
-        
-        locationSplit = re.split(r'[\(\)\[\]\:]',location)
-        self.start = locationSplit[1]
-        self.stop = locationSplit[2]
-        self.strand = locationSplit[4]
 
 ##### MAKE MAPPING DICTIONARY FROM ORIGINAL GENBANK FILE #####
 proteinLocations = {}
 locusTags = {}
 mappingCDSCount = 0
 
-for seq_record in SeqIO.parse(mappingFileHandle, "genbank"):
+for seq_record in SeqIO.parse(masterGenbankFH, "genbank"):
     for record in seq_record.features:
         if record.type == 'CDS':
             mappingCDSCount += 1
@@ -54,7 +33,7 @@ for seq_record in SeqIO.parse(mappingFileHandle, "genbank"):
 RASTCDSCount = 0
 mappingRASTMATCH = 0
 
-for seq_record in SeqIO.parse(RASTFileHandle, "genbank"):
+for seq_record in SeqIO.parse(secondaryGenbankFH, "genbank"):
     for record in seq_record.features:
         if record.type == 'CDS':
             RASTCDSCount += 1
