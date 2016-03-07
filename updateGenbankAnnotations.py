@@ -54,44 +54,80 @@ method = args.method
 if not os.path.exists(outputFolder):
     os.makedirs(outputFolder) 
 
-## GRAB NEW ANNOTATIONS
-    
+# GRAB NEW ANNOTATIONS AND SAVE TO LIST
 annotationsFile = open(annotationsFH, 'rt')
-annotations = {}
 
+annotationsList = []
 while True:
     line = annotationsFile.readline()
     line = line.rstrip()
-    split = line.split('\t') 
-   
-    if (len(split) > 1):
-        if db_xref_type != "none":
-            annotations[split[0]] = db_xref_type+":"+split[1]
-        else:
-            annotations[split[0]] = split[1]
+    annotationsList.append(line)
             
     if not line:
         break   
 
+print(str(len(annotationsList))+" annotations in file") 
 
+# ITERATE THROUGH THE GENBANK FILE AND ADD ANNOTATIONS
+     
 noIdentifier = 0  
         
-## UPDATE GENBANK FILE
 for seq_record in SeqIO.parse(genbankFH, "genbank"):
     for feature in seq_record.features:
         if feature.type == 'CDS':
             
             # Does the CDS have this type of identifier?
-            if args.identifier in feature.qualifiers:
-                
-                ## Are any of these qualifiers in the new annotations file?
-                for qualifierRecord in feature.qualifiers[args.identifier]:
-                    if qualifierRecord in annotations:
+            if identifier in feature.qualifiers:
+
+                for line in list(annotationsList): # iterating over a copy of the list, so I can delete from the real list
+                    split = line.split('\t') 
+    
+                    if (len(split) > 1):
                         
-                        if method == "o":
-                            feature.qualifiers[args.qualifier] = annotations[qualifierRecord]
-                        else:
-                            feature.qualifiers[args.qualifier].append(annotations[qualifierRecord])
+                        lineIdentifier = split[0]
+                        lineAnnotation = split[1]
+                        
+                        # if "col3" special flag has been called. This ignores the -q flag.
+                        if qualifier == "col3":
+                            lineQualifier = split[2]
+                  
+                        else: # qualifier comes from the -q flag instead
+                            lineQualifier = qualifier
+                            
+                        
+                        # some genbank files may have multiple identifiers... check lineIdentifier against them all
+                        for featureIdentifier in feature.qualifiers[args.identifier]:
+                            if featureIdentifier == lineIdentifier:
+                                
+                                ## OK, we have a hit, go ahead and update the record!
+                                
+                                if len(annotationsList) % 1000 == 0:
+                                    print(str(len(annotationsList))+" annotations remaining")
+                                
+                                if db_xref_type != "none":
+                                    lineAnnotation = db_xref_type+":"+lineAnnotation
+                                    
+                                    
+                                if method == "o":
+                                    feature.qualifiers[lineQualifier] = lineAnnotation
+                                else:
+                                    if lineQualifier in feature.qualifiers:
+                                        feature.qualifiers[lineQualifier].append(lineAnnotation)
+                                    else:
+                                        feature.qualifiers[lineQualifier] = [lineAnnotation]
+                                annotationsList.remove(line)
+                        
+                            
+                        
+                            
+            
+            
+            
+            
+                
+                
+                
+                            
                             
                             
             else:
@@ -102,4 +138,4 @@ for seq_record in SeqIO.parse(genbankFH, "genbank"):
     SeqIO.write(seq_record, output_handle, "genbank")
     output_handle.close()
     
-print("CDS without "+args.identifier+"identifier: "+str(noIdentifier))
+print("CDS without "+args.identifier+" identifier: "+str(noIdentifier))

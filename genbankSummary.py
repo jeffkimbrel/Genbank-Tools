@@ -12,17 +12,13 @@ parser.add_argument('-g', '--genbank',
 parser.add_argument('-i', '--id',
     default="all",
     help="Limit to only the record with this ID" )
-    
-args = parser.parse_args()
 
-#genbankFH = "/Users/kimbrel1/Dropbox/LLNL/Genomes/NCBI/Phaeobacter_gallaeciensis_DSM_26640_uid232357/NC_023137.gbk"
-#genbankFH = "/Users/kimbrel1/Dropbox/LLNL/Projects/Microalgae/Phaeobacter/Phaeobacter_26640_RAST_output_Genbank.gbk"
+args = parser.parse_args()
 genbankFH = args.genbank
 
 featureTypePrint = ["CDS","rRNA","tRNA"]
 qualifierTypePrint = ["locus_tag","db_xref","translation","EC_number","product"]
 #dbTypePrint = ["SEED","GO","GI","CDD","GeneID"]
-
 
 for seq_record in SeqIO.parse(genbankFH, "genbank"):
     
