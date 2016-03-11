@@ -13,85 +13,77 @@ parser.add_argument('-i', '--id',
     default="all",
     help="Limit to only the record with this ID" )
 
+parser.add_argument('-c', '--combine',
+    action = "store_true", 
+    help="Combine all records into a single summary" )
+    
 args = parser.parse_args()
-genbankFH = args.genbank
 
-featureTypePrint = ["CDS","rRNA","tRNA"]
-qualifierTypePrint = ["locus_tag","db_xref","translation","EC_number","product"]
-#dbTypePrint = ["SEED","GO","GI","CDD","GeneID"]
+features = {}
+qualifiers = {}
+db_xref = {}
 
-for seq_record in SeqIO.parse(genbankFH, "genbank"):
-    
+for seq_record in SeqIO.parse(args.genbank, "genbank"):
     if args.id == "all" or args.id == str(seq_record.id):
-    
-        print("ID: "+seq_record.id)
-        print("Description: "+seq_record.description)
         
-        featureTypeCount = {}
-        qualifierCount = {}
-        db_xrefCount = {}
-        
-        uniqueLocusTags = {}
-        uniquedb_xref= {}
-        uniqueEC = {}
-        uniqueProduct = {}
-        
-        for record in seq_record.features:
-            featureTypeCount[record.type] = featureTypeCount.get(record.type, 0) + 1
+## INCREASE COUNT OF FEATURE TYPE IN features DICTIONARY
+        for feature in seq_record.features:
+            features[feature.type] = features.get(feature.type, 0) + 1
             
-            for key in record.qualifiers:
-                qualifierCount[key] = qualifierCount.get(key, 0) + 1
+## GET QUALIFIERS OF FEATURES
+            for qualifierKey in feature.qualifiers:
+                for qualifierValue in feature.qualifiers[qualifierKey]:
+                    
+                    if qualifierKey in qualifiers: ## IF SO, THEN APPEND QUALIFIER VALUE TO LIST
+                        qualifiers[qualifierKey].append(qualifierValue)
+                    else: # OTHERWISE, ADD NEW
+                        qualifiers[qualifierKey] = [qualifierValue]
                 
-                # get unique qualifiers
-            
-                ## locus_tag
-                if key == 'locus_tag':
-                    for tag in record.qualifiers[key]:
-                        uniqueLocusTags[tag] = 0            
-                
-                ## EC        
-                if key == 'EC_number':
-                    for ec in record.qualifiers[key]:
-                        uniqueEC[ec] = 0   
-                
-                ## Product        
-                if key == 'product':
-                    for product in record.qualifiers[key]:
-                        uniqueProduct[product] = 0   
+## GET DB_XREF TYPES    
+                    if qualifierKey == 'db_xref':
+                        db = qualifierValue.split(":")
                         
-                # get more detail about db_xref
-                if key == 'db_xref':
-                    for db in record.qualifiers[key]:
-                        hit = db.split(":")[0]
-                        db_xrefCount[hit] = db_xrefCount.get(hit, 0) + 1
-                        uniquedb_xref[db] = 0
-        
-        print("Feature Types:")
-        for featureType in featureTypePrint:
-            if featureType in featureTypeCount:
-                print("\t"+featureType+": "+str(featureTypeCount[featureType]))
-        
-        print("Qualifier Types:")
-        for qualifier in qualifierTypePrint:
-            if qualifier in qualifierCount:
-                if qualifier == 'locus_tag':
-                    print("\t"+qualifier+": "+str(qualifierCount[qualifier])+" ("+str(len(uniqueLocusTags))+" unique)")
-                elif qualifier == 'EC_number':
-                    print("\t"+qualifier+": "+str(qualifierCount[qualifier])+" ("+str(len(uniqueEC))+" unique)")
-                elif qualifier == 'product':
-                    print("\t"+qualifier+": "+str(qualifierCount[qualifier])+" ("+str(len(uniqueProduct))+" unique)")
-                else:
-                    print("\t"+qualifier+": "+str(qualifierCount[qualifier]))
+                        if db[0] in db_xref: ## IF SO, THEN APPEND QUALIFIER VALUE TO LIST
+                            db_xref[db[0]].append(db[1])
+                        else: # OTHERWISE, ADD NEW
+                            db_xref[db[0]] = [db[1]]
+            
+## DISPLAY IF -c FLAG IS FALSE
+        if args.combine == False:
+            print("ID: "+seq_record.id)
+            print("Description: "+seq_record.description)
+            for featureType in features:    
+                print("\t"+featureType+": "+str(features[featureType]))
                 
-        print("db_xref Types:")
-        for db in db_xrefCount:
-            
-            # get count
-            counter = 0
-            for hit in uniquedb_xref:
-                if hit.startswith(db):
-                    counter = counter + 1
-            
-            print("\t"+db+": "+str(db_xrefCount[db])+" ("+str(counter)+" unique)")
-            
-        print("##")
+                
+            print("Qualifier Types:")
+            for qualifierType in qualifiers: 
+                unique = str(len(list(set(qualifiers[qualifierType]))))
+                print("\t"+qualifierType+": "+str(len(qualifiers[qualifierType]))+" ("+unique+" unique)")
+                
+            print("db_xref Types:")
+            for dbType in db_xref: 
+                unique = str(len(list(set(db_xref[dbType]))))
+                print("\t"+dbType+": "+str(len(db_xref[dbType]))+" ("+unique+" unique)")
+                
+## RESET DICTIONARIES
+            features = {}
+            qualifiers = {}
+            db_xref = {}
+
+## DISPLAY IF -c FLAG IS TRUE
+if args.combine == True:
+    print("All Records")
+    print("Feature Types:")
+    for featureType in features:    
+        print("\t"+featureType+": "+str(features[featureType]))
+        
+    print("Qualifier Types:")
+    for qualifierType in qualifiers: 
+        unique = str(len(list(set(qualifiers[qualifierType]))))
+        print("\t"+qualifierType+": "+str(len(qualifiers[qualifierType]))+" ("+unique+" unique)")
+        
+    print("db_xref Types:")
+    for dbType in db_xref: 
+        unique = str(len(list(set(db_xref[dbType]))))
+        print("\t"+dbType+": "+str(len(db_xref[dbType]))+" ("+unique+" unique)")
