@@ -1,7 +1,14 @@
 import re
 import os
+import argparse
 
-PFPFileHandle = "/Users/kimbrel1/Dropbox/LLNL/Projects/Microalgae/Phaeobacter/results/getKeggPathway4PSATformat.out"
+parser = argparse.ArgumentParser(description='Extract product, EC_number, ecPath, KEGG, GO and signalP results from a PFP output file')
+
+parser.add_argument('-p', '--pfp',
+    help="Path to PFP output",
+    required=True)
+
+args = parser.parse_args()
 
 ##### CLASSES #####
 
@@ -23,7 +30,7 @@ class pfp:
 pfpRaw = {}
 pfpCDSCount = 0
 
-pfpFile = open(PFPFileHandle, 'rt')
+pfpFile = open(args.pfp, 'rt')
 
 while True:
     line = pfpFile.readline()
