@@ -29,6 +29,8 @@ masterGenbankFH = args.master
 secondaryGenbankFH = args.secondary
 outputFolder = args.folder
 
+print("\nOUTPUT FOLDER: "+outputFolder+"\n")
+
 if not os.path.exists(outputFolder):
     os.makedirs(outputFolder)
 

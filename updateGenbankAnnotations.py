@@ -54,6 +54,8 @@ method = args.method
 if not os.path.exists(outputFolder):
     os.makedirs(outputFolder) 
 
+print("\nOUTPUT FOLDER: "+outputFolder+"\n")
+
 # GRAB NEW ANNOTATIONS AND SAVE TO LIST
 annotationsFile = open(annotationsFH, 'rt')
 
