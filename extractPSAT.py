@@ -35,16 +35,16 @@ pfpFile = open(args.pfp, 'rt')
 while True:
     line = pfpFile.readline()
     line = line.rstrip()
-    split = line.split('\t') 
+    split = line.split('\t')
     if len(split) > 2:   
-        name = split[2]    
+        name = split[2]
         nameSplit = name.split('|')
         if len(nameSplit) > 2:
             if nameSplit[-2] in pfpRaw:
                 pfpRaw[nameSplit[-2]].append(line)
             else:
                 pfpCDSCount += 1
-                pfpRaw[nameSplit[-2]] = [line]    
+                pfpRaw[nameSplit[-2]] = [line]
     
     if not line:
         break
