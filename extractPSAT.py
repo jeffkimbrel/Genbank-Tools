@@ -11,7 +11,6 @@ parser.add_argument('-p', '--pfp',
 args = parser.parse_args()
 
 ##### CLASSES #####
-
 class pfp:
     pfpList = []
     
@@ -24,7 +23,33 @@ class pfp:
         self.kegg = list(set(kegg))
         self.go = list(set(go))
         self.signalP = signalP
+    
+##### FUNCTIONS #####    
+def cleanEC(ecList):
+
+    completeList = []
+    incompleteList = []
         
+    for ec in ecList:
+        if '-' in ec:
+            incompleteList.append(ec)
+        else:
+            completeList.append(ec)
+     
+    completeList = list(set(completeList))
+    incompleteList = list(set(incompleteList))
+    
+    for incompleteEC in list(incompleteList): # iterate through a copy        
+        for completeEC in completeList:
+            if completeEC.startswith(incompleteEC.rstrip('.-')):
+                
+                #print(completeEC,incompleteEC,sep="\t")
+                if incompleteEC in incompleteList:
+                    incompleteList.remove(incompleteEC)
+                    
+    ecListFinal = incompleteList + completeList
+    
+    return(ecListFinal)
 
 ##### READ IN PFP RESULTS #####
 pfpRaw = {}
@@ -45,10 +70,18 @@ while True:
             else:
                 pfpCDSCount += 1
                 pfpRaw[nameSplit[-2]] = [line]
+        else:
+            nameSplit = name.split('/')
+            if len(nameSplit) > 1:
+                if nameSplit[1] in pfpRaw:
+                    pfpRaw[nameSplit[1]].append(line)
+                else:
+                    pfpCDSCount += 1
+                    pfpRaw[nameSplit[1]] = [line]        
     
     if not line:
         break
-
+        
 ##### PROCESS PFP INFO AND FIND EXTRACT RELEVANT DATA #####
 pfpProcessed = {}        
 
@@ -68,11 +101,10 @@ for protein in pfpRaw:
             if split[4] != '':
                 product.append(split[4])
                 
-        ## ECs
-        #ecList = re.findall(r"[0-9]+\.[0-9\-]+\.[0-9\-]+\.[0-9\-]+", line) # Loose
-        ecList = re.findall(r"[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+", line) # Strict
-        ec = ec + ecList
+        ecList = re.findall(r"[0-9]+\.[0-9\-]+\.[0-9\-]+\.[0-9\-]+", line)
         
+        ec = ec + ecList
+
         ## EC Pathways
         ecPathList = re.findall(r"ec[0-9]{5}", line)   
         ecPath = ecPath + ecPathList
@@ -90,18 +122,19 @@ for protein in pfpRaw:
                 signalP = ['signalP:YES']
                 
     #chrome,location = proteinLocations[protein].split("\t")
-    
     #locus_tag = str(locusTags[protein][0])
     
-    pfp(protein,product,ec,ecPath,kegg,go,signalP)
+    ec = cleanEC(ec)
     
+    pfp(protein,product,ec,ecPath,kegg,go,signalP)
+
 for protein in pfp.pfpList:
     
     # print product
     for product in protein.product:
         print(protein.name+"\t"+product+"\tproduct")    
 
-    # print EC_number
+    # print EC_number    
     for ec_number in protein.ec:
         print(protein.name+"\t"+ec_number+"\tEC_number")  
         
@@ -121,4 +154,4 @@ for protein in pfp.pfpList:
     
     ## print signalP
     for signalP in protein.signalP:
-        print(protein.name+"\t"+signalP+"\tdb_xref")  
+        print(protein.name+"\t"+signalP+"\tdb_xref")
