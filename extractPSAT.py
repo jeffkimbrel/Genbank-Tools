@@ -99,7 +99,7 @@ for protein in pfpRaw:
         ## Product
         if len(split) >= 5:
             if split[4] != '':
-                product.append(split[4])
+                product.append('EC:'+split[4])
                 
         ecList = re.findall(r"[0-9]+\.[0-9\-]+\.[0-9\-]+\.[0-9\-]+", line)
         
@@ -112,6 +112,13 @@ for protein in pfpRaw:
         ## KEGGs
         keggList = re.findall(r"K[0-9]{5}", line)
         kegg = kegg + keggList
+        
+        ## KEGG Product
+        if len(split) > 21: # '>=' doesn't work for some reason
+            KEGGsplit = split[21].split(":")
+            
+            #print(split[21])
+            product.append('KEGG:'+KEGGsplit[2])
         
         ## GO Terms
         goList = re.findall(r"GO\:[0-9]+", line) # GO:0043565
