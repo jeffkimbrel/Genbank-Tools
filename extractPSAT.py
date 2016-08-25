@@ -117,9 +117,9 @@ for protein in pfpRaw:
         goList = re.findall(r"GO\:[0-9]+", line) # GO:0043565
         go = go + goList
         
-        if len(split) >= 15:
+        if len(split) >= 16:
             if split[14].upper() == "YES":
-                signalP = ['signalP:YES']
+                signalP = ['signalP:loc='+split[15]+';met='+split[16]]
                 
     #chrome,location = proteinLocations[protein].split("\t")
     #locus_tag = str(locusTags[protein][0])
@@ -154,4 +154,5 @@ for protein in pfp.pfpList:
     
     ## print signalP
     for signalP in protein.signalP:
-        print(protein.name+"\t"+signalP+"\tdb_xref")
+        if signalP != "signalP:NO":
+            print(protein.name+"\t"+signalP+"\tdb_xref")
