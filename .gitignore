@@ -6,3 +6,5 @@ extractTest.txt
 *.txt
 
 Workbook1.xlsx
+
+.DS_Store
