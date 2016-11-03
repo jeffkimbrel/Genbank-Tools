@@ -51,6 +51,6 @@ for seq_record in SeqIO.parse(args.genbank, "genbank"):
     seq_record.features = new_features
 
     ### Write to file
-    output_handle = open(args.genbank+".cleaned.gbk", "a")
+    output_handle = open(args.genbank+".cleaned_"+timestamp+".gbk", "a")
     SeqIO.write(seq_record, output_handle, "genbank")
     output_handle.close()
