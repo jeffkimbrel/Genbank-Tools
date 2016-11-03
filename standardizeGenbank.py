@@ -24,6 +24,7 @@ locusTagFields = ['gene','gene_synonym']
 
 args = parser.parse_args()
 
+
 for seq_record in SeqIO.parse(args.genbank, "genbank"):
     new_features = []
     for feature in seq_record.features:
@@ -48,7 +49,8 @@ for seq_record in SeqIO.parse(args.genbank, "genbank"):
             new_features.append(feature)
 
     seq_record.features = new_features
+
     ### Write to file
-    output_handle = open("out/"+seq_record.name+"_updated.gbk", "w")
+    output_handle = open(args.genbank+".cleaned.gbk", "a")
     SeqIO.write(seq_record, output_handle, "genbank")
     output_handle.close()
