@@ -20,7 +20,7 @@ parser.add_argument('-l', '--locus',
 
 keeperQualifiers = ['protein_id','locus_tag','translation']
 
-locusTagFields = ['gene','gene_synonym']
+locusTagFields = ['gene','gene_synonym','locus_tag']
 
 args = parser.parse_args()
 
