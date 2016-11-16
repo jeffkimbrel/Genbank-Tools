@@ -20,7 +20,7 @@ parser.add_argument('-l', '--locus',
 
 parser.add_argument('-p', '--pseudogenes',
     action = "store_true",
-    help="Allow pseudogenes to be included")
+    help="Allow pseudogenes to be included, default=don't")
 
 keeperQualifiers = ['protein_id','locus_tag','translation']
 
