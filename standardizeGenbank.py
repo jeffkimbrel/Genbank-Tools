@@ -18,12 +18,15 @@ parser.add_argument('-l', '--locus',
     help="locus tag prefix",
     required=True)
 
+parser.add_argument('-p', '--pseudogenes',
+    action = "store_true",
+    help="Allow pseudogenes to be included")
+
 keeperQualifiers = ['protein_id','locus_tag','translation']
 
 locusTagFields = ['gene','gene_synonym','locus_tag']
 
 args = parser.parse_args()
-
 
 for seq_record in SeqIO.parse(args.genbank, "genbank"):
     new_features = []
@@ -46,7 +49,17 @@ for seq_record in SeqIO.parse(args.genbank, "genbank"):
                     feature.qualifiers[qualifier] = []
                 else:
                     feature.qualifiers[qualifier] = feature.qualifiers[qualifier]
-            new_features.append(feature)
+
+            # print all (allow pseudogenes) or only print if all keepers are present
+            if args.pseudogenes == False:
+                allow = 1
+                for qualifier in keeperQualifiers:
+                    if qualifier not in feature.qualifiers:
+                        allow = 0
+                if allow == 1:
+                    new_features.append(feature)
+            else:
+                new_features.append(feature)
 
     seq_record.features = new_features
 
