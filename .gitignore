@@ -1,10 +1,8 @@
 
 *.gbk
 
-extractTest.txt
-
 *.txt
 
-Workbook1.xlsx
+*.xlsx
 
 .DS_Store
