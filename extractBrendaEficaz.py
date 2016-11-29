@@ -1,6 +1,7 @@
 import re
 import os
 import argparse
+import functions as f
 
 parser = argparse.ArgumentParser(description='Extract Brenda and EFICAz EC numbers from PSAT Output')
 
@@ -11,34 +12,6 @@ parser.add_argument('-p', '--psat',
 args = parser.parse_args()
 
 psatFile = open(args.psat, 'rt')
-
-##### FUNCTIONS #####
-def cleanEC(ecList):
-
-    completeList = []
-    incompleteList = []
-
-    for ec in ecList:
-        if '-' in ec:
-            incompleteList.append(ec)
-        else:
-            completeList.append(ec)
-
-    completeList = list(set(completeList))
-    incompleteList = list(set(incompleteList))
-
-    for incompleteEC in list(incompleteList): # iterate through a copy
-        for completeEC in completeList:
-            if completeEC.startswith(incompleteEC.rstrip('.-')):
-
-                #print(completeEC,incompleteEC,sep="\t")
-                if incompleteEC in incompleteList:
-                    incompleteList.remove(incompleteEC)
-
-    ecListFinal = incompleteList + completeList
-
-    return(ecListFinal)
-
 
 ecDict = {}
 
@@ -70,11 +43,14 @@ while True:
 print("LOCUS_TAG","EFICAz","BRENDA","NR")
 
 for locus_tag in sorted(ecDict.keys()):
-    eficaz = cleanEC(ecDict[locus_tag]["EFICAz"])
-    brenda = cleanEC(ecDict[locus_tag]["BRENDA"])
+    eficaz = ecDict[locus_tag]["EFICAz"]
+    brenda = ecDict[locus_tag]["BRENDA"]
+
+    #eficaz = f.cleanEC(eficaz)
+    #brenda = f.cleanEC(brenda)
 
     both = eficaz + brenda
-    both = cleanEC(both)
+    both = f.cleanEC(both)
 
     if eficaz == []:
         eficaz = ["NA"]
@@ -88,5 +64,3 @@ for locus_tag in sorted(ecDict.keys()):
         print(*eficaz,sep=";",end="\t")
         print(*brenda,sep=";",end="\t")
         print(*both,sep=";")
-
-    #print(locus_tag,len(eficaz),len(brenda),len(both),sep="\t")

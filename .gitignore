@@ -6,3 +6,5 @@
 *.xlsx
 
 .DS_Store
+
+*.pyc
