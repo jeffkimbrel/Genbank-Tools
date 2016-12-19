@@ -2,6 +2,7 @@ from Bio import SeqIO
 import re
 import os
 import argparse
+import functions as f
 
 # RAST output by default has an incorrect header which leads to a BioPython warning. This will suppress all warnings.
 import warnings
@@ -35,7 +36,10 @@ for seq_record in SeqIO.parse(args.genbank, "genbank"):
 
             # extract EC
             ecList = re.findall(r"EC [0-9]+\.[0-9\-]+\.[0-9\-]+\.[0-9\-]+", function)
+            ecList = f.cleanEC(ecList)
 
             # print
-            print(locus,function,sep="\t",end="\t")
-            print(*ecList,sep=";")
+            if len(ecList) > 0:
+            #print(locus,function,sep="\t",end="\t")
+                print(locus,end="\t")
+                print(*ecList,sep=";")

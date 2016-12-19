@@ -3,6 +3,12 @@ import re
 import os
 import argparse
 
+# RAST output by default has an incorrect header which leads to a BioPython warning. This will suppress all warnings.
+import warnings
+from Bio import BiopythonWarning
+warnings.simplefilter('ignore', BiopythonWarning)
+#
+
 parser = argparse.ArgumentParser(description='Summarize the contents of a genbank file or record')
 
 parser.add_argument('-g', '--genbank',
@@ -71,12 +77,12 @@ for seq_record in SeqIO.parse(args.genbank, "genbank"):
 ## DISPLAY IF -c FLAG IS TRUE
 if args.combine == True:
     for featureType in features:
-        print("all","feature",featureType,str(features[featureType]),sep="\t")
+        print(str(args.genbank),"feature",featureType,str(features[featureType]),sep="\t")
 
     for qualifierType in qualifiers:
         unique = str(len(list(set(qualifiers[qualifierType]))))
-        print("all","qualifier",qualifierType,str(len(qualifiers[qualifierType])),unique,sep="\t")
+        print(str(args.genbank),"qualifier",qualifierType,str(len(qualifiers[qualifierType])),unique,sep="\t")
 
     for dbType in db_xref:
         unique = str(len(list(set(db_xref[dbType]))))
-        print("all","db_xref",dbType,str(len(db_xref[dbType])),unique,sep="\t")
+        print(str(args.genbank),"db_xref",dbType,str(len(db_xref[dbType])),unique,sep="\t")

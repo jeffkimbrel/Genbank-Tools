@@ -40,7 +40,7 @@ while True:
     if not line:
         break
 
-print("LOCUS_TAG","EFICAz","BRENDA","NR")
+print("LOCUS_TAG","EFICAz","BRENDA","NR",sep="\t")
 
 for locus_tag in sorted(ecDict.keys()):
     eficaz = ecDict[locus_tag]["EFICAz"]

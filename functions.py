@@ -4,6 +4,10 @@ def cleanEC(ecList):
     incompleteList = []
 
     for ec in ecList:
+
+        # RAST annotations add "EC " at the beginning, this removes it
+        ec = ec.replace("EC ","")
+
         if '-' in ec:
             incompleteList.append(ec)
         else:

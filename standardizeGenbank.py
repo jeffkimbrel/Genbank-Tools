@@ -24,7 +24,7 @@ parser.add_argument('-p', '--pseudogenes',
 
 keeperQualifiers = ['protein_id','locus_tag','translation']
 
-locusTagFields = ['gene','gene_synonym','locus_tag']
+locusTagFields = ['gene','gene_synonym','locus_tag','old_locus_tag']
 
 args = parser.parse_args()
 
