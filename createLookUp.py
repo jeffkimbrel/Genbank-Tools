@@ -3,7 +3,7 @@ import re
 import os
 import argparse
 
-parser = argparse.ArgumentParser(description='Give it several fields, and it will create a tab-delimited lookup tab-delimited lookup table')
+parser = argparse.ArgumentParser(description='Give it several fields, and it will create a tab-delimited lookup table')
 
 parser.add_argument('-g', '--genbank',
     help="Genbank file to summarize",
