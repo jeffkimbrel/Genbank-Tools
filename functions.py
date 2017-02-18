@@ -6,8 +6,9 @@ def cleanEC(ecList):
     for ec in ecList:
 
         # Remove "EC " (rast) and "EC:"
-        ec = ec.replace("EC ","")
         ec = ec.replace("EC:","")
+        ec = ec.replace("EC","")
+        ec = ec.replace(" ","")
 
         if '-' in ec:
             incompleteList.append(ec)
@@ -18,9 +19,10 @@ def cleanEC(ecList):
     incompleteList = list(set(incompleteList))
 
     for incompleteEC in list(incompleteList): # iterate through a copy
-        for completeEC in completeList:
-            if completeEC.startswith(incompleteEC.rstrip('-')):
 
+        for completeEC in completeList:
+
+            if completeEC.startswith(incompleteEC.split('-')[0]):
                 if incompleteEC in incompleteList:
                     incompleteList.remove(incompleteEC)
 
