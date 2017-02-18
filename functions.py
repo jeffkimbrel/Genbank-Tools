@@ -5,8 +5,9 @@ def cleanEC(ecList):
 
     for ec in ecList:
 
-        # RAST annotations add "EC " at the beginning, this removes it
+        # Remove "EC " (rast) and "EC:"
         ec = ec.replace("EC ","")
+        ec = ec.replace("EC:","")
 
         if '-' in ec:
             incompleteList.append(ec)
@@ -18,9 +19,8 @@ def cleanEC(ecList):
 
     for incompleteEC in list(incompleteList): # iterate through a copy
         for completeEC in completeList:
-            if completeEC.startswith(incompleteEC.rstrip('.-')):
+            if completeEC.startswith(incompleteEC.rstrip('-')):
 
-                #print(completeEC,incompleteEC,sep="\t")
                 if incompleteEC in incompleteList:
                     incompleteList.remove(incompleteEC)
 

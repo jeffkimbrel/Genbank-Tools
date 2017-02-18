@@ -1,14 +1,7 @@
 from Bio import SeqIO
-import re
 import os
 import argparse
 import functions as f
-
-# RAST output by default has an incorrect header which leads to a BioPython warning. This will suppress all warnings.
-import warnings
-from Bio import BiopythonWarning
-warnings.simplefilter('ignore', BiopythonWarning)
-#
 
 parser = argparse.ArgumentParser(description='Extract EC numbers from a genbank file')
 
@@ -22,7 +15,7 @@ for seq_record in SeqIO.parse(args.genbank, "genbank"):
     for feature in seq_record.features:
         if feature.type == 'CDS':
 
-            # get locus name
+            # get locus/gene name
             locus = ""
             if 'locus_tag' in feature.qualifiers:
                 locus = feature.qualifiers['locus_tag'][0]
@@ -30,15 +23,12 @@ for seq_record in SeqIO.parse(args.genbank, "genbank"):
                 locus = feature.qualifiers['gene'][0]
 
             # get functions
-            function = ""
-            if 'function' in feature.qualifiers:
-                function = feature.qualifiers['function'][0]
+            EC_number = ""
+            if 'EC_number' in feature.qualifiers:
+                EC_number = feature.qualifiers['EC_number']
+                #print("**",EC_number)
 
-            # extract EC
-            ecList = re.findall(r"EC [0-9]+\.[0-9\-]+\.[0-9\-]+\.[0-9\-]+", function)
-            ecList = f.cleanEC(ecList)
-
-
+            ecList = f.cleanEC(EC_number)
 
             # print
             if len(ecList) > 0:

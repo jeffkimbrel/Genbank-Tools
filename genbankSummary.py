@@ -32,6 +32,7 @@ db_xref = {}
 print("RECORD","TYPE1","TYPE2","COUNT","UNIQUE",sep="\t")
 
 for seq_record in SeqIO.parse(args.genbank, "genbank"):
+
     if args.id == "all" or args.id == str(seq_record.id):
 
 ## INCREASE COUNT OF FEATURE TYPE IN features DICTIONARY

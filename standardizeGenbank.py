@@ -22,13 +22,17 @@ parser.add_argument('-p', '--pseudogenes',
     action = "store_true",
     help="Allow pseudogenes to be included, default=don't")
 
-keeperQualifiers = ['protein_id','locus_tag','translation']
+keeperQualifiers = ['protein_id', 'locus_tag', 'translation']
 
-locusTagFields = ['gene','gene_synonym','locus_tag','old_locus_tag']
+locusTagFields = ['gene', 'gene_synonym', 'locus_tag', 'old_locus_tag']
 
 args = parser.parse_args()
 
 for seq_record in SeqIO.parse(args.genbank, "genbank"):
+
+    # for IMG
+    seq_record.id = seq_record.description
+
     new_features = []
     for feature in seq_record.features:
         if feature.type == 'CDS':
@@ -42,6 +46,9 @@ for seq_record in SeqIO.parse(args.genbank, "genbank"):
                         if str(args.locus) in potential:
                             locusTag = potential
             feature.qualifiers['locus_tag'] = [locusTag]
+
+            # just for IMG genomes
+            feature.qualifiers['protein_id'] = [locusTag]
 
             # remove all but the "keepers"
             for qualifier in feature.qualifiers:
