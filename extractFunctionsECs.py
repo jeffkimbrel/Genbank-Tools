@@ -29,16 +29,25 @@ for seq_record in SeqIO.parse(args.genbank, "genbank"):
             elif 'gene' in feature.qualifiers:
                 locus = feature.qualifiers['gene'][0]
 
+            ecList = []
+
+            if 'ec_number' in feature.qualifiers:
+                for ec in feature.qualifiers['ec_number']:
+                    ecList.append(ec)
+
             # get functions
-            function = ""
+            if 'product' in feature.qualifiers:
+                for product in feature.qualifiers['product']:
+                    ecListProduct = re.findall(r"EC [0-9]+\.[0-9\-]+\.[0-9\-]+\.[0-9\-]+", product)
+                    ecList = ecList + ecListProduct
+
             if 'function' in feature.qualifiers:
-                function = feature.qualifiers['function'][0]
+                for function in feature.qualifiers['function']:
+                    ecListFunction = re.findall(r"EC [0-9]+\.[0-9\-]+\.[0-9\-]+\.[0-9\-]+", function)
+                    ecList = ecList + ecListFunction
 
-            # extract EC
-            ecList = re.findall(r"EC [0-9]+\.[0-9\-]+\.[0-9\-]+\.[0-9\-]+", function)
+            # Merge and Clean
             ecList = f.cleanEC(ecList)
-
-
 
             # print
             if len(ecList) > 0:
