@@ -1,3 +1,5 @@
+#! /usr/bin/env python
+
 import re
 import os
 import argparse
@@ -8,6 +10,10 @@ parser = argparse.ArgumentParser(description='Extract Brenda and EFICAz EC numbe
 parser.add_argument('-p', '--psat',
     help="Path to psat output",
     required=True)
+
+parser.add_argument('-v', '--verbose',
+    action = "store_true",
+    help="Print a bit more summary" )
 
 args = parser.parse_args()
 
@@ -40,14 +46,14 @@ while True:
     if not line:
         break
 
-print("LOCUS_TAG","EFICAz","BRENDA","NR",sep="\t")
+#print("LOCUS_TAG","EFICAz","BRENDA","NR",sep="\t")
 
 for locus_tag in sorted(ecDict.keys()):
     eficaz = ecDict[locus_tag]["EFICAz"]
     brenda = ecDict[locus_tag]["BRENDA"]
 
-    #eficaz = f.cleanEC(eficaz)
-    #brenda = f.cleanEC(brenda)
+    eficaz = f.cleanEC(eficaz)
+    brenda = f.cleanEC(brenda)
 
     both = eficaz + brenda
     both = f.cleanEC(both)
@@ -61,6 +67,9 @@ for locus_tag in sorted(ecDict.keys()):
 
     if "NA" not in eficaz or "NA" not in brenda or "NA" not in both:
         print(locus_tag,end="\t")
-        print(*eficaz,sep=";",end="\t")
-        print(*brenda,sep=";",end="\t")
+
+        if args.verbose == True:
+            print(*eficaz,sep=";",end="\t")
+            print(*brenda,sep=";",end="\t")
+
         print(*both,sep=";")

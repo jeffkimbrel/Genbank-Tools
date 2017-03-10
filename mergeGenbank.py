@@ -1,3 +1,5 @@
+#! /usr/bin/env python
+
 from Bio import SeqIO
 import re
 import os
@@ -76,6 +78,6 @@ for masterGenbank in SeqIO.parse(masterGenbankFH, "genbank"):
 
 
     ### Write to file
-    output_handle = open(outputFolder+"/"+masterGenbank.name+"_merged.gbk", "w")
+    output_handle = open(outputFolder+"/merged.gbk", "a")
     SeqIO.write(masterGenbank, output_handle, "genbank")
     output_handle.close()

@@ -1,3 +1,5 @@
+#! /usr/bin/env python
+
 import re
 import os
 import argparse
@@ -8,6 +10,10 @@ parser = argparse.ArgumentParser(description='Extract EC numbers from a KEGG?KAA
 parser.add_argument('-k', '--kaas',
     help="KEGG/KAAS File",
     required=True)
+
+parser.add_argument('-v', '--verbose',
+    action = "store_true",
+    help="Print a bit more summary" )
 
 args = parser.parse_args()
 # convert map file to dictionary
@@ -30,12 +36,15 @@ for line in open(args.kaas, 'rt'):
     if len(split) > 1:
 
         locus = split[0]
-
         ko = split[1]
 
-
-        if ko in mapDict:
-            print(split[0],ko,sep="\t",end="\t")
-            print(mapDict[ko],sep=";")
+        if args.verbose == True:
+            if ko in mapDict:
+                print(split[0], ko, sep = "\t", end = "\t")
+                print(*mapDict[ko], sep = ";")
+            else:
+                print(split[0], ko, "Not Found", sep = "\t")
         else:
-            print(split[0],ko,"Not Found",sep="\t")
+            if ko in mapDict:
+                print(split[0], sep = "\t", end = "\t")
+                print(*mapDict[ko], sep = ";")

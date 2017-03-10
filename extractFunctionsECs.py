@@ -1,3 +1,5 @@
+#! /usr/bin/env python
+
 from Bio import SeqIO
 import re
 import os
@@ -31,8 +33,8 @@ for seq_record in SeqIO.parse(args.genbank, "genbank"):
 
             ecList = []
 
-            if 'ec_number' in feature.qualifiers:
-                for ec in feature.qualifiers['ec_number']:
+            if 'EC_number' in feature.qualifiers:
+                for ec in feature.qualifiers['EC_number']:
                     ecList.append(ec)
 
             # get functions
