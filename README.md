@@ -1,4 +1,4 @@
-# Genbank-Tools
+# JAK-gb
 
 A collection of tools to merge, summarize and update genbank record annotations.
 
@@ -81,16 +81,16 @@ The “master” genbank file. Nothing will be removed from this record, and it 
 
 `required`
 
-The “secondary” genbank file. Qualifiers from this record will be moved to the “master”. 
+The “secondary” genbank file. Qualifiers from this record will be moved to the “master”.
 
 ### folder (f)
 
 `default = mergedOutput_timestamp`
 
-The output folder that the records will be saved to. 
+The output folder that the records will be saved to.
 
 ## Output
-This script will save all records as their own `.gbk` file. To merge into a single concatenated record called `merged.gbk`,, from the command line type 
+This script will save all records as their own `.gbk` file. To merge into a single concatenated record called `merged.gbk`,, from the command line type
 
 ```
 cat *.gbk > merged.gbk`
@@ -98,7 +98,7 @@ cat *.gbk > merged.gbk`
 
 # Add Annotations to a Genbank File
 
-The `updateGenbankAnnotations.py` script will take a tab-delimited file of annotations, and add or overwrite a genbank file. 
+The `updateGenbankAnnotations.py` script will take a tab-delimited file of annotations, and add or overwrite a genbank file.
 
 ```
 usage: updateGenbankAnnotations.py [-h] -g GENBANK -a ANNOTATIONS [-m METHOD]
@@ -155,13 +155,13 @@ The method for updating. If set to “o”, it will overwrite the qualifier in t
 
 `default = locus_tag`
 
-Due to their being different ways to map a feature in the genbank file with the feature in the annotations file, the script uses an `identifier` to map between the two files. For example, if your both your genbank and annotations file use `locus_tag`, then ‘locus_tag’ would be the identifier. 
+Due to their being different ways to map a feature in the genbank file with the feature in the annotations file, the script uses an `identifier` to map between the two files. For example, if your both your genbank and annotations file use `locus_tag`, then ‘locus_tag’ would be the identifier.
 
 ### qualifier (q)
 
 `default = product`
 
-The `qualifier` that you want column 2 to be mapped to. For example, the default is `product`, so after identifying the correct genbank entry based on the `identifier`, the `product` will be updated with the annotation in column 2. 
+The `qualifier` that you want column 2 to be mapped to. For example, the default is `product`, so after identifying the correct genbank entry based on the `identifier`, the `product` will be updated with the annotation in column 2.
 
 ### db_xref (x)
 
