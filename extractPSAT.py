@@ -1,7 +1,9 @@
 import re
 import os
 import argparse
-import functions as f
+import tools.anno
+
+## OPTIONS #####################################################################
 
 parser = argparse.ArgumentParser(description='Extract product, EC_number, ecPath, KEGG, GO and signalP results from a PFP output file')
 
@@ -11,7 +13,7 @@ parser.add_argument('-p', '--pfp',
 
 args = parser.parse_args()
 
-##### CLASSES #####
+## CLASSES #####################################################################
 class pfp:
     pfpList = []
 
@@ -25,7 +27,7 @@ class pfp:
         self.go = list(set(go))
         self.signalP = signalP
 
-##### READ IN PFP RESULTS #####
+## READ IN PSAT OUTPUT #########################################################
 pfpRaw = {}
 pfpCDSCount = 0
 
@@ -56,7 +58,7 @@ while True:
     if not line:
         break
 
-##### PROCESS PFP INFO AND FIND EXTRACT RELEVANT DATA #####
+## PROCESS PFP INFO AND FIND EXTRACT RELEVANT DATA #############################
 pfpProcessed = {}
 
 for protein in pfpRaw:
@@ -73,7 +75,8 @@ for protein in pfpRaw:
         ## Product
         if len(split) >= 5:
             if split[4] != '':
-                product.append('EC:'+split[4])
+                #product.append('EC:'+split[4])
+                product.append(split[4])
 
         ecList = re.findall(r"[0-9]+\.[0-9\-]+\.[0-9\-]+\.[0-9\-]+", line)
 
@@ -92,7 +95,8 @@ for protein in pfpRaw:
             KEGGsplit = split[21].split(":")
 
             #print(split[21])
-            product.append('KEGG:'+KEGGsplit[2])
+            #product.append('KEGG:'+KEGGsplit[2])
+            product.append(KEGGsplit[2])
 
         ## GO Terms
         goList = re.findall(r"GO\:[0-9]+", line) # GO:0043565
@@ -105,9 +109,11 @@ for protein in pfpRaw:
     #chrome,location = proteinLocations[protein].split("\t")
     #locus_tag = str(locusTags[protein][0])
 
-    ec = f.cleanEC(ec)
+    ec = tools.anno.cleanEC(ec)
 
     pfp(protein,product,ec,ecPath,kegg,go,signalP)
+
+## PRINT RESULTS ###############################################################
 
 for protein in pfp.pfpList:
 
@@ -124,10 +130,12 @@ for protein in pfp.pfpList:
     ## print ecPath
     for ecPath in protein.ecPath:
         print(protein.name+"\tecPath:"+ecPath+"\tdb_xref")
+        #print(protein.name+"\t"+ecPath+"\tdb_xref")
 
     ## print kegg
     for kegg in protein.kegg:
-        print(protein.name+"\tKEGG:"+kegg+"\tdb_xref")
+        print(protein.name+"\tKO:"+kegg+"\tdb_xref")
+        #print(protein.name+"\t"+kegg+"\tdb_xref")
 
     ## print go
     for go in protein.go:

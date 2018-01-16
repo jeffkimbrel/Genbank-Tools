@@ -9,7 +9,17 @@ def incrementVersion(seqRecord):
     return(seqRecord)
 
 def addComment(seqRecord, newComment):
-    comments = seqRecord.annotations["comment"].split("\n")
+
+    # is there a comments field?
+    if "comment" in seqRecord.annotations:
+        comments = seqRecord.annotations["comment"]
+    else:
+        comments = []
+
+    # check to see if it has already been formatted to a list
+    if not isinstance(comments, list):
+        comments = comments.split("\n")
+
     comments.append(newComment)
     seqRecord.annotations["comment"] = comments
 
