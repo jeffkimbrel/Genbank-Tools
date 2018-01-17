@@ -1,8 +1,6 @@
 
 *.gbk
 
-*.txt
-
 *.xlsx
 
 .DS_Store
