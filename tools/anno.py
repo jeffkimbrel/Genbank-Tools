@@ -28,7 +28,4 @@ def cleanEC(ecList):
 
     ecListFinal = incompleteList + completeList
 
-    # remove empties
-    ecListFinal = filter(None, ecListFinal)
-
     return(ecListFinal)

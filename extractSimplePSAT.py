@@ -76,7 +76,6 @@ for gene in sorted(results.keys()):
     ## PATHWAY
 
     results[gene]["pathway"] = list(set(results[gene]["pathway"]))
-
     for pathway in results[gene]["pathway"]:
         pathway = "pathway:" + str(pathway)
         print(gene, "db_xref", pathway, sep = "\t")

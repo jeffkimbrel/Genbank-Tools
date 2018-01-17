@@ -3,105 +3,91 @@ import re
 import os
 import argparse
 import datetime
+import tools.gb
 
-timestamp = datetime.datetime.now().strftime("%Y%m%d%H%M%S")
+## MISC #####################################################################
 
-# col1 = identifier, col2 = new annotation
+timestamp = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
-## OPTIONS
+## OPTIONS #####################################################################
 
 parser = argparse.ArgumentParser(description='Add or overwrite annotations in a genbank file')
 
-parser.add_argument('-g', '--genbank', help = "Genbank file to update", required = True)
-parser.add_argument('-a', '--annotations', help = "File with annotations (col1=identifier, col2=new annotation)", required = True)
-parser.add_argument('-m', '--method', help = "'o' = overwite, 'a' = append/add", default = "a")
-parser.add_argument('-i', '--identifier', help = "Type of annotation from column 1 of annotations file (ex. 'locus_tag', 'GI') to look for in the genbank file", default = "locus_tag")
-parser.add_argument('-q', '--qualifier', help = "Qualifier to add new annotations to (ex. 'product', 'db_xref')", default = "product")
-parser.add_argument('-x', '--db_xref_type', help = "If using -q db_xref this option will prepend annotations with this variable, if your annotations file is missing it (ex. 'GO', 'SEED')", default = "none")
-parser.add_argument('-f', '--folder', help = "Output folder, defaults to updatedOutput + timestamp", default = "updatedOutput_" + timestamp)
-
+parser.add_argument('-g', '--genbank',
+    help = "Genbank file to update",
+    required = True)
+parser.add_argument('-a', '--annotations',
+    help = "File with annotations. Expects three tab-separated columns with 'locus_tag', 'qualifier', 'value'",
+    required = True)
+parser.add_argument('-o', '--out',
+    help = "Output File",
+    required = True)
+parser.add_argument('-c', '--additionalComment',
+    required = False,
+    default = None,
+    help = "Add to the comment line, default = NO")
+    
 args = parser.parse_args()
 
-genbankFH = args.genbank
-annotationsFH = args.annotations
-identifier = args.identifier
-qualifier = args.qualifier
-db_xref_type = args.db_xref_type
-outputFolder = args.folder
-method = args.method
+## PROCESS ANNOTATIONS FILE ####################################################
+lines = [line.strip() for line in open(args.annotations)]
 
-if not os.path.exists(outputFolder):
-    os.makedirs(outputFolder)
+annotations = {}
+uniqueQualifiers = []
 
-print("\nOUTPUT FOLDER: " + outputFolder + "\n")
+for line in lines:
+    if not line.lstrip().startswith('#'):
+        if len(line.split("\t")) == 3:
+            line = line.rstrip()
+            locus, qualifier, value = line.split("\t")
 
-# GRAB NEW ANNOTATIONS AND SAVE TO LIST
-annotationsFile = open(annotationsFH, 'rt')
+            uniqueQualifiers.append(qualifier)
 
-annotationsList = []
-while True:
-    line = annotationsFile.readline()
-    line = line.rstrip()
-    annotationsList.append(line)
 
-    if not line:
-        break
-
-print(str(len(annotationsList)) + " annotations in file")
-
-# ITERATE THROUGH THE GENBANK FILE AND ADD ANNOTATIONS
-
-noIdentifier = 0
-
-for seq_record in SeqIO.parse(genbankFH, "genbank"):
-    for feature in seq_record.features:
-        if feature.type == 'CDS':
-
-            # Does the CDS have this type of identifier?
-            if identifier in feature.qualifiers:
-
-                for line in list(annotationsList): # iterating over a copy of the list, so I can delete from the real list
-                    split = line.split('\t')
-
-                    if (len(split) > 1):
-
-                        lineIdentifier = split[0]
-                        lineAnnotation = split[1]
-
-                        # if "col3" special flag has been called. This ignores the -q flag.
-                        if qualifier == "col3":
-                            lineQualifier = split[2]
-
-                        else: # qualifier comes from the -q flag instead
-                            lineQualifier = qualifier
-
-                        # some genbank files may have multiple identifiers... check lineIdentifier against them all
-                        for featureIdentifier in feature.qualifiers[args.identifier]:
-                            if featureIdentifier == lineIdentifier:
-
-                                ## OK, we have a hit, go ahead and update the record!
-
-                                if len(annotationsList) % 1000 == 0:
-                                    print(str(len(annotationsList)) + " annotations remaining")
-
-                                if db_xref_type != "none":
-                                    lineAnnotation = db_xref_type + ":" + lineAnnotation
-
-                                if method == "o":
-                                    feature.qualifiers[lineQualifier] = lineAnnotation
-                                else:
-                                    if lineQualifier in feature.qualifiers:
-                                        feature.qualifiers[lineQualifier].append(lineAnnotation)
-                                    else:
-                                        feature.qualifiers[lineQualifier] = [lineAnnotation]
-                                annotationsList.remove(line)
-
+            if locus in annotations:
+                if qualifier in annotations[locus]:
+                    annotations[locus][qualifier].append(value)
+                else:
+                    annotations[locus][qualifier] = [value]
             else:
-                noIdentifier += 1
+                annotations[locus] = {}
+                annotations[locus][qualifier] = [value]
 
-    ### Write to file
-    output_handle = open(outputFolder + "/" + seq_record.name + "_updated.gbk", "w")
+uniqueQualifiers = list(set(uniqueQualifiers))
+
+## ADD TO GENBANK FILE #########################################################
+for seq_record in SeqIO.parse(args.genbank, "genbank"):
+
+    ## for IMG
+    seq_record.id = seq_record.description
+
+    ###### Update comments and version #########################################
+    seq_record = tools.gb.addComment(seq_record, "=====" + timestamp + "=====")
+    seq_record = tools.gb.addComment(seq_record, "program=updateGenbankAnnotations.py")
+    argsDict = vars(args)
+    for arg in argsDict:
+        seq_record = tools.gb.addComment(seq_record, (str(arg) + "=" + str(argsDict[arg])))
+
+    seq_record = tools.gb.incrementVersion(seq_record)
+
+    ###### Update Annotations ##################################################
+
+    for feature in seq_record.features: #iterate through features
+        if 'locus_tag' in feature.qualifiers: # does it have a locus tag
+            for locusGB in feature.qualifiers['locus_tag']: #go through locus list
+                if locusGB in annotations: #is it found in the annotations
+
+                    for qualifier in uniqueQualifiers:
+
+                        if qualifier in annotations[locusGB]:
+                            if qualifier in feature.qualifiers:
+                                feature.qualifiers[qualifier] += annotations[locusGB][qualifier]
+                            else:
+                                feature.qualifiers[qualifier] = annotations[locusGB][qualifier]
+
+
+
+    ###### Write ###############################################################
+    output_handle = open(args.out, "a")
     SeqIO.write(seq_record, output_handle, "genbank")
     output_handle.close()
-
-print("CDS without " + args.identifier + " identifier: " + str(noIdentifier))
