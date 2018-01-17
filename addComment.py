@@ -9,7 +9,7 @@ import tools.gb
 
 ## OPTIONS #####################################################################
 
-parser = argparse.ArgumentParser(description = 'Clean a genbank file')
+parser = argparse.ArgumentParser(description = 'Add a comment to a genbank file')
 
 ########## Required ############################################################
 
