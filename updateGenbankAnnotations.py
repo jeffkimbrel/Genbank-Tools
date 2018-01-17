@@ -4,6 +4,7 @@ import os
 import argparse
 import datetime
 import tools.gb
+import tools.anno
 
 ## MISC #####################################################################
 
@@ -26,7 +27,7 @@ parser.add_argument('-c', '--additionalComment',
     required = False,
     default = None,
     help = "Add to the comment line, default = NO")
-    
+
 args = parser.parse_args()
 
 ## PROCESS ANNOTATIONS FILE ####################################################
@@ -82,10 +83,18 @@ for seq_record in SeqIO.parse(args.genbank, "genbank"):
                         if qualifier in annotations[locusGB]:
                             if qualifier in feature.qualifiers:
                                 feature.qualifiers[qualifier] += annotations[locusGB][qualifier]
+
+                                if qualifier == "EC_number":
+                                    feature.qualifiers[qualifier] = tools.anno.cleanEC(feature.qualifiers[qualifier])
+                                else:
+                                    feature.qualifiers[qualifier] = list(set(feature.qualifiers[qualifier]))
                             else:
                                 feature.qualifiers[qualifier] = annotations[locusGB][qualifier]
 
-
+                                if qualifier == "EC_number":
+                                    feature.qualifiers[qualifier] = tools.anno.cleanEC(feature.qualifiers[qualifier])
+                                else:
+                                    feature.qualifiers[qualifier] = list(set(feature.qualifiers[qualifier]))
 
     ###### Write ###############################################################
     output_handle = open(args.out, "a")
