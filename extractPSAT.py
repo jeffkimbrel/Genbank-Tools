@@ -4,7 +4,7 @@ import tools.anno
 
 ## OPTIONS #####################################################################
 
-parser = argparse.ArgumentParser(description='Extract EC, ECdesc and ecPath from a PSAT output file')
+parser = argparse.ArgumentParser(description='Extract any and all EC, ECdesc and ecPath from a PSAT output file')
 
 parser.add_argument('-p', '--psat',
     help="PSAT output",
