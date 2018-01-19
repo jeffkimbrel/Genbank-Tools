@@ -23,13 +23,25 @@ parser.add_argument('-c', '--combine',
     action = "store_true",
     help="Combine all records into a single summary" )
 
+parser.add_argument('-m', '--markdown',
+    action = "store_true",
+    help="Format table output for markdown" )
+
 args = parser.parse_args()
 
 features = {}
 qualifiers = {}
 db_xref = {}
 
-print("RECORD","TYPE1","TYPE2","COUNT","UNIQUE",sep="\t")
+colSep = "\t"
+
+if args.markdown == True:
+    colSep = " | "
+
+print("RECORD", "TYPE1", "TYPE2", "COUNT", "UNIQUE", sep = colSep)
+
+if args.markdown == True:
+    print("--- | --- | --- | --- | ---")
 
 for seq_record in SeqIO.parse(args.genbank, "genbank"):
 
@@ -60,15 +72,15 @@ for seq_record in SeqIO.parse(args.genbank, "genbank"):
 ## DISPLAY IF -c FLAG IS FALSE
         if args.combine == False:
             for featureType in features:
-                print(seq_record.id,"feature",featureType,str(features[featureType]),sep="\t")
+                print(seq_record.id,"feature",featureType,str(features[featureType]),sep = colSep)
 
             for qualifierType in qualifiers:
                 unique = str(len(list(set(qualifiers[qualifierType]))))
-                print(seq_record.id,"qualifier",qualifierType,str(len(qualifiers[qualifierType])),unique,sep="\t")
+                print(seq_record.id,"qualifier",qualifierType,str(len(qualifiers[qualifierType])),unique, sep = colSep)
 
             for dbType in db_xref:
                 unique = str(len(list(set(db_xref[dbType]))))
-                print(seq_record.id,"db_xref",dbType,str(len(db_xref[dbType])),unique,sep="\t")
+                print(seq_record.id,"db_xref",dbType,str(len(db_xref[dbType])),unique,sep = colSep)
 
 ## RESET DICTIONARIES
             features = {}
@@ -78,12 +90,12 @@ for seq_record in SeqIO.parse(args.genbank, "genbank"):
 ## DISPLAY IF -c FLAG IS TRUE
 if args.combine == True:
     for featureType in features:
-        print(str(args.genbank),"feature",featureType,str(features[featureType]),sep="\t")
+        print(str(args.genbank),"feature",featureType,str(features[featureType]),sep=colSep)
 
     for qualifierType in qualifiers:
         unique = str(len(list(set(qualifiers[qualifierType]))))
-        print(str(args.genbank),"qualifier",qualifierType,str(len(qualifiers[qualifierType])),unique,sep="\t")
+        print(str(args.genbank),"qualifier",qualifierType,str(len(qualifiers[qualifierType])),unique,sep=colSep)
 
     for dbType in db_xref:
         unique = str(len(list(set(db_xref[dbType]))))
-        print(str(args.genbank),"db_xref",dbType,str(len(db_xref[dbType])),unique,sep="\t")
+        print(str(args.genbank),"db_xref",dbType,str(len(db_xref[dbType])),unique,sep=colSep)
