@@ -1,6 +1,8 @@
-def incrementVersion(seqRecord):
+def incrementVersion(seqRecord, inc = True):
     if "sequence_version" in seqRecord.annotations:
-        version = seqRecord.annotations["sequence_version"] + 1
+        version = seqRecord.annotations["sequence_version"]
+        if inc == True:
+            version += 1
         seqRecord.id = str(seqRecord.name) + "." + str(version)
 
     else:
