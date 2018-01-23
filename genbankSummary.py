@@ -80,14 +80,14 @@ for seq_record in SeqIO.parse(args.genbank, "genbank"):
 
 ## DISPLAY IF -c FLAG IS FALSE
         if args.combine == False:
-            for featureType in features:
+            for featureType in sorted(features.keys()):
                 print(seq_record.id, "feature", featureType, str(features[featureType]), sep = colSep)
 
-            for qualifierType in qualifiers:
+            for qualifierType in sorted(qualifiers.keys()):
                 unique = str(len(list(set(qualifiers[qualifierType]))))
                 print(seq_record.id, "qualifier", qualifierType, str(len(qualifiers[qualifierType])), unique, sep = colSep)
 
-            for dbType in db_xref:
+            for dbType in sorted(db_xref.keys()):
                 unique = str(len(list(set(db_xref[dbType]))))
                 print(seq_record.id, "db_xref", dbType, str(len(db_xref[dbType])), unique, sep = colSep)
 
@@ -98,13 +98,13 @@ for seq_record in SeqIO.parse(args.genbank, "genbank"):
 
 ## DISPLAY IF -c FLAG IS TRUE
 if args.combine == True:
-    for featureType in features:
+    for featureType in sorted(features.keys()):
         print(str(args.genbank), "feature", featureType, str(features[featureType]), sep = colSep)
 
-    for qualifierType in qualifiers:
+    for qualifierType in sorted(qualifiers.keys()):
         unique = str(len(list(set(qualifiers[qualifierType]))))
         print(str(args.genbank), "qualifier", qualifierType, str(len(qualifiers[qualifierType])), unique, sep = colSep)
 
-    for dbType in db_xref:
+    for dbType in sorted(db_xref.keys()):
         unique = str(len(list(set(db_xref[dbType]))))
         print(str(args.genbank), "db_xref", dbType, str(len(db_xref[dbType])), unique, sep = colSep)
