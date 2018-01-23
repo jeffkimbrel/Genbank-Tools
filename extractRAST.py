@@ -17,6 +17,7 @@ parser.add_argument('-r', '--rast',
 args = parser.parse_args()
 
 ## PROCESS RAST FILE ###########################################################
+
 lines = [line.strip() for line in open(args.rast)]
 
 for line in lines:

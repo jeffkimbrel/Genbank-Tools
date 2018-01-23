@@ -4,6 +4,8 @@ import os
 import argparse
 import sys
 
+## OPTIONS #####################################################################
+
 parser = argparse.ArgumentParser(description='Create .faa file from a genbank record')
 
 parser.add_argument('-g', '--genbank',
@@ -15,6 +17,8 @@ parser.add_argument('-i', '--identifier',
     help="Which genbank identifier should be the fasta header" )
 
 args = parser.parse_args()
+
+## LOOP ########################################################################
 
 for seq_record in SeqIO.parse(args.genbank, "genbank"):
     for feature in seq_record.features:

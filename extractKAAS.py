@@ -17,6 +17,7 @@ parser.add_argument('-k', '--kaas',
 args = parser.parse_args()
 
 ## PROCESS MAP FILE ############################################################
+
 koMap = {}
 
 koFile = os.path.dirname(sys.argv[0]) + "/tools/kegg2EC.txt"
