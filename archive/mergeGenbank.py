@@ -75,8 +75,6 @@ for masterGenbank in SeqIO.parse(masterGenbankFH, "genbank"):
 
                 masterRecord.qualifiers = combinedQualifiers
 
-
-
     ### Write to file
     output_handle = open(outputFolder+"/merged.gbk", "a")
     SeqIO.write(masterGenbank, output_handle, "genbank")

@@ -14,10 +14,6 @@ parser.add_argument('-k', '--kaas',
     help="KEGG/KAAS File",
     required=True)
 
-parser.add_argument('-v', '--verbose',
-    action = "store_true",
-    help="Print a bit more summary" )
-
 args = parser.parse_args()
 
 ## PROCESS MAP FILE ############################################################
