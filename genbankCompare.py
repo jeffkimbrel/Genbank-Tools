@@ -20,7 +20,7 @@ parser.add_argument('-m', '--markdown',
 
 args = parser.parse_args()
 
-## MISC ########################################################################
+## HEADER ######################################################################
 
 colSep = "\t"
 
@@ -37,6 +37,11 @@ if args.markdown == True:
     for genbankFile in args.genbank:
         print("---", sep = colSep, end = colSep)
     print()
+
+## MISC ########################################################################
+
+ignoreFeatures = []
+ignoreQualifiers = ['LowScore', 'gene_calling_method', 'Name', 'mol_type', 'conf', 'codon', 'Model', 'RNA_Class_ID', 'Type', 'gc_cont']
 
 featuresDict = {}
 qualifierDict = {}
@@ -81,6 +86,10 @@ for genbankFile in sorted(featuresDict.keys()):
 
 uniqueFeatures = list(set(uniqueFeatures))
 
+for ignore in ignoreFeatures:
+    if ignore in uniqueFeatures:
+        uniqueFeatures.remove(ignore)
+
 for feature in sorted(uniqueFeatures):
     print("FEATURE", feature, sep = colSep, end = colSep)
     for genbankFile in sorted(featuresDict.keys()):
@@ -100,6 +109,10 @@ for genbankFile in sorted(qualifierDict.keys()):
 
 uniqueQualifiers = list(set(uniqueQualifiers))
 
+for ignore in ignoreQualifiers:
+    if ignore in uniqueQualifiers:
+        uniqueQualifiers.remove(ignore)
+
 for qualifier in sorted(uniqueQualifiers):
     print("QUALIFIER", qualifier, sep = colSep, end = colSep)
     for genbankFile in sorted(qualifierDict.keys()):
@@ -109,7 +122,7 @@ for qualifier in sorted(uniqueQualifiers):
             unique = len(list(set(qualifierDict[genbankFile][qualifier])))
             value = str(total) + " (" + str(unique) + ")"
 
-            print(value, end = colSep, sep = colSep)
+            print(total, end = colSep, sep = colSep)
         else:
             print(0, end = colSep, sep = colSep)
     print()
@@ -133,7 +146,7 @@ for db in sorted(uniqueDB):
             unique = len(list(set(db_xrefDict[genbankFile][db])))
             value = str(total) + " (" + str(unique) + ")"
 
-            print(value, end = colSep, sep = colSep)
+            print(total, end = colSep, sep = colSep)
         else:
             print(0, end = colSep, sep = colSep)
     print()
