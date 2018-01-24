@@ -77,6 +77,13 @@ for seq_record in SeqIO.parse(args.master, "genbank"):
 
                         masterFeature.qualifiers[secondaryQualifier] = secondaryFeatures[masterID].qualifiers[secondaryQualifier]
 
+                    if secondaryQualifier == "translation":
+                        newTranslations = []
+                        for translation in masterFeature.qualifiers[secondaryQualifier]:
+                            translation = translation.replace('*', '')
+                            newTranslations.append(translation)
+                        masterFeature.qualifiers[secondaryQualifier] = newTranslations
+                        
                     masterFeature.qualifiers[secondaryQualifier] = list(set(masterFeature.qualifiers[secondaryQualifier]))
 
     ###### WRITE ###############################################################
