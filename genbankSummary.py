@@ -1,6 +1,5 @@
 #! /usr/bin/env python
 
-
 from Bio import SeqIO
 import re
 import os
