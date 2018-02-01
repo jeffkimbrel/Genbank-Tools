@@ -29,12 +29,12 @@ for seq_record in SeqIO.parse(args.genbank, "genbank"):
     for feature in seq_record.features:
         for key in feature.qualifiers:
 
-            ## EC_NUMBER #######################################################
+            ## EC_NUMBER
             if key == "EC_number" and args.ec_number == True:
                 for ec in feature.qualifiers[key]:
                     print(ec)
 
-            ## KEGG ############################################################
+            ## KEGG 
             if key == "db_xref" and args.kegg == True:
                 for db_xref in feature.qualifiers[key]:
                     key, value = db_xref.split(":")

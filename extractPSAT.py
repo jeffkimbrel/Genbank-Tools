@@ -48,7 +48,8 @@ for line in lines:
         if len(split) >= 5:
             geneFull, ec, product, pathwayFull = split[2:6]
 
-############### EXTRACTION #####################################################
+            ## EXTRACTION ######################################################
+
             if len(ec) > 0:
                 gene = getGeneName(geneFull)
                 pathway = getPathways(pathwayFull)
@@ -64,6 +65,7 @@ for line in lines:
                                     }
 
 ## PRINT RESULTS ###############################################################
+
 for gene in sorted(results.keys()):
 
     ## EC

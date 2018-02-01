@@ -53,9 +53,11 @@ def filterQualifiers(feature, keeperQualifiers):
 for seq_record in SeqIO.parse(args.genbank, "genbank"):
 
     ## for IMG
+
     seq_record.id = seq_record.description
 
     ###### Update comments and version #########################################
+
     seq_record = tools.gb.addComment(seq_record, "=====" + timestamp + "=====")
     seq_record = tools.gb.addComment(seq_record, "program=standardizeGenbank.py")
     argsDict = vars(args)
@@ -65,6 +67,7 @@ for seq_record in SeqIO.parse(args.genbank, "genbank"):
     seq_record = tools.gb.incrementVersion(seq_record, inc = False)
 
     ###### Standardize #########################################################
+
     new_features = []
     for feature in seq_record.features:
         if feature.type == 'source':
@@ -103,6 +106,7 @@ for seq_record in SeqIO.parse(args.genbank, "genbank"):
     seq_record.features = new_features
 
     ## WRITE ###################################################################
+
     output_handle = open(args.genbank+".cleaned.gbk", "a")
     SeqIO.write(seq_record, output_handle, "genbank")
     output_handle.close()

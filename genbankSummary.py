@@ -55,11 +55,13 @@ for seq_record in SeqIO.parse(args.genbank, "genbank"):
 
     if args.id == "all" or args.id == str(seq_record.id):
 
-## INCREASE COUNT OF FEATURE TYPE IN features DICTIONARY
+        ## INCREASE COUNT OF FEATURE TYPE IN features DICTIONARY ###############
+
         for feature in seq_record.features:
             features[feature.type] = features.get(feature.type, 0) + 1
 
-## GET QUALIFIERS OF FEATURES
+            ## GET QUALIFIERS OF FEATURES ######################################
+
             for qualifierKey in feature.qualifiers:
                 for qualifierValue in feature.qualifiers[qualifierKey]:
 
@@ -68,7 +70,8 @@ for seq_record in SeqIO.parse(args.genbank, "genbank"):
                     else: # OTHERWISE, ADD NEW
                         qualifiers[qualifierKey] = [qualifierValue]
 
-## GET DB_XREF TYPES
+                    ## GET DB_XREF TYPES #######################################
+
                     if qualifierKey == 'db_xref':
                         db = qualifierValue.split(":")
 
@@ -77,7 +80,8 @@ for seq_record in SeqIO.parse(args.genbank, "genbank"):
                         else: # OTHERWISE, ADD NEW
                             db_xref[db[0]] = [db[1]]
 
-## DISPLAY IF -c FLAG IS FALSE
+## DISPLAY IF -c FLAG IS FALSE #################################################
+
         if args.combine == False:
             for featureType in sorted(features.keys()):
                 print(seq_record.id, "feature", featureType, str(features[featureType]), sep = colSep)
@@ -90,12 +94,14 @@ for seq_record in SeqIO.parse(args.genbank, "genbank"):
                 unique = str(len(list(set(db_xref[dbType]))))
                 print(seq_record.id, "db_xref", dbType, str(len(db_xref[dbType])), unique, sep = colSep)
 
-## RESET DICTIONARIES
+            ## RESET DICTIONARIES ##############################################
+
             features = {}
             qualifiers = {}
             db_xref = {}
 
-## DISPLAY IF -c FLAG IS TRUE
+## DISPLAY IF -c FLAG IS TRUE ##################################################
+
 if args.combine == True:
     for featureType in sorted(features.keys()):
         print(str(args.genbank), "feature", featureType, str(features[featureType]), sep = colSep)

@@ -6,7 +6,7 @@ import datetime
 import tools.gb
 import tools.anno
 
-## MISC #####################################################################
+## MISC ########################################################################
 
 timestamp = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
@@ -31,6 +31,7 @@ parser.add_argument('-c', '--additionalComment',
 args = parser.parse_args()
 
 ## PROCESS ANNOTATIONS FILE ####################################################
+
 lines = [line.strip() for line in open(args.annotations)]
 
 annotations = {}
@@ -57,12 +58,14 @@ for line in lines:
 uniqueQualifiers = list(set(uniqueQualifiers))
 
 ## ADD TO GENBANK FILE #########################################################
+
 for seq_record in SeqIO.parse(args.genbank, "genbank"):
 
     ## for IMG
     seq_record.id = seq_record.description
 
     ###### Update comments and version #########################################
+
     seq_record = tools.gb.addComment(seq_record, "=====" + timestamp + "=====")
     seq_record = tools.gb.addComment(seq_record, "program=updateGenbankAnnotations.py")
     argsDict = vars(args)
@@ -97,6 +100,7 @@ for seq_record in SeqIO.parse(args.genbank, "genbank"):
                                     feature.qualifiers[qualifier] = list(set(feature.qualifiers[qualifier]))
 
     ###### Write ###############################################################
+
     output_handle = open(args.out, "a")
     SeqIO.write(seq_record, output_handle, "genbank")
     output_handle.close()

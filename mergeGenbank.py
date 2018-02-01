@@ -47,6 +47,7 @@ for seq_record in SeqIO.parse(args.secondary, "genbank"):
 for seq_record in SeqIO.parse(args.master, "genbank"):
 
     ## UPDATE COMMENTS AND VERSION #############################################
+
     seq_record = tools.gb.addComment(seq_record, "=====" + timestamp + "=====")
     seq_record = tools.gb.addComment(seq_record, "program=mergeGenbank.py")
 
@@ -60,6 +61,7 @@ for seq_record in SeqIO.parse(args.master, "genbank"):
     seq_record = tools.gb.incrementVersion(seq_record)
 
     ## DO THE UPDATING #########################################################
+
     for masterFeature in seq_record.features:
         if masterFeature.type in includedFeatures:
             masterID = masterFeature.qualifiers['locus_tag'][0] + "_" + masterFeature.type
@@ -83,10 +85,11 @@ for seq_record in SeqIO.parse(args.master, "genbank"):
                             translation = translation.replace('*', '')
                             newTranslations.append(translation)
                         masterFeature.qualifiers[secondaryQualifier] = newTranslations
-                        
+
                     masterFeature.qualifiers[secondaryQualifier] = list(set(masterFeature.qualifiers[secondaryQualifier]))
 
     ###### WRITE ###############################################################
+
     output_handle = open(args.out, "a")
     SeqIO.write(seq_record, output_handle, "genbank")
     output_handle.close()

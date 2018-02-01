@@ -39,7 +39,8 @@ for seq_record in SeqIO.parse(args.genbank, "genbank"):
     ## for IMG
     seq_record.id = seq_record.description
 
-    ###### Update comments and version #########################################
+    ## Update comments and version #############################################
+
     seq_record = tools.gb.addComment(seq_record, "=====" + timestamp + "=====")
     seq_record = tools.gb.addComment(seq_record, "program=addComment.py")
     argsDict = vars(args)
@@ -50,6 +51,7 @@ for seq_record in SeqIO.parse(args.genbank, "genbank"):
         seq_record = tools.gb.incrementVersion(seq_record)
 
     ## WRITE ###################################################################
+
     output_handle = open(args.out, "a")
     SeqIO.write(seq_record, output_handle, "genbank")
     output_handle.close()

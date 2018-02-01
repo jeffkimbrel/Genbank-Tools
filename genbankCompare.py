@@ -41,8 +41,8 @@ if args.markdown == True:
 ## MISC ########################################################################
 
 ignoreFeatures = []
-#ignoreQualifiers = ['LowScore', 'gene_calling_method', 'Name', 'mol_type', 'conf', 'codon', 'Model', 'RNA_Class_ID', 'Type', 'gc_cont']
-ignoreQualifiers = []
+ignoreQualifiers = ['LowScore', 'gene_calling_method', 'Name', 'mol_type', 'conf', 'codon', 'Model', 'RNA_Class_ID', 'Type', 'gc_cont']
+#ignoreQualifiers = []
 
 featuresDict = {}
 qualifierDict = {}
