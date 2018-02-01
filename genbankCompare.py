@@ -28,13 +28,13 @@ if args.markdown == True:
     colSep = " | "
 
 print("TYPE1", "TYPE2", sep = colSep, end = colSep)
-for genbankFile in args.genbank:
+for genbankFile in sorted(args.genbank):
     print(genbankFile, sep = colSep, end = colSep)
 print()
 
 if args.markdown == True:
     print("---", "---", sep = colSep, end = colSep)
-    for genbankFile in args.genbank:
+    for genbankFile in sorted(args.genbank):
         print("---", sep = colSep, end = colSep)
     print()
 
@@ -50,7 +50,7 @@ db_xrefDict = {}
 
 ## GENBANK #####################################################################
 
-for genbankFile in args.genbank:
+for genbankFile in sorted(args.genbank):
 
     featuresDict[genbankFile] = {}
     qualifierDict[genbankFile] = {}
