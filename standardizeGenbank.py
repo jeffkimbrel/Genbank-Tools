@@ -34,7 +34,7 @@ args = parser.parse_args()
 ## MISC ########################################################################
 
 keeperQualifiers = ['protein_id', 'locus_tag', 'translation']
-locusTagFields = ['gene', 'gene_synonym', 'locus_tag', 'old_locus_tag']
+locusTagFields = ['locus_tag', 'gene', 'gene_synonym', 'old_locus_tag']
 timestamp = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
 ## FUNCTIONS ###################################################################
