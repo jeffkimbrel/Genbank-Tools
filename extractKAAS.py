@@ -20,8 +20,18 @@ args = parser.parse_args()
 
 koMap = {}
 
-koFile = os.path.dirname(sys.argv[0]) + "/tools/kegg2EC.txt"
+koFile = os.path.dirname(sys.argv[0]) + "/tools/keggNameDefs.txt"
 for line in open(koFile, 'rt'):
+    line = line.rstrip()
+
+    split = line.split("\t")
+    ko = split[0]
+    product = split[1]
+
+    koMap[ko] = {'product' : product}
+
+ecFile = os.path.dirname(sys.argv[0]) + "/tools/kegg2EC.txt"
+for line in open(ecFile, 'rt'):
     line = line.rstrip()
 
     split = line.split("\t")
@@ -29,8 +39,12 @@ for line in open(koFile, 'rt'):
     product = split[2].split(" [")[0]
     ec = tools.anno.cleanEC(split[3:])
 
-    koMap[ko] = {'product' : product,
-                    'EC_number' : ec}
+
+    if ko in koMap:
+        koMap[ko]['EC_number'] = ec
+    else:
+        koMap[ko] = {'product' : product,
+                     'EC_number' : ec}
 
 ## PROCESS KEGG FILE ###########################################################
 
@@ -48,5 +62,6 @@ for line in lines:
                 print(gene, 'product', koMap[ko]['product'], sep = "\t")
                 print(gene, 'db_xref', "KO:"+str(ko), sep = "\t")
 
-                for ec in koMap[ko]['EC_number']:
-                    print(gene, 'EC_number', ec, sep = "\t")
+                if 'EC_number' in koMap[ko]:
+                    for ec in koMap[ko]['EC_number']:
+                        print(gene, 'EC_number', ec, sep = "\t")
