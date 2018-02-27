@@ -39,7 +39,6 @@ for line in open(ecFile, 'rt'):
     product = split[2].split(" [")[0]
     ec = tools.anno.cleanEC(split[3:])
 
-
     if ko in koMap:
         koMap[ko]['EC_number'] = ec
     else:

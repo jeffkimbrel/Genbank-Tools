@@ -21,12 +21,23 @@ parser.add_argument('-k', '--kegg',
     action = "store_true",
     help="Extract KEGG IDs from the db_xref 'KO' field" )
 
+parser.add_argument('-p', '--product',
+    action = "store_true",
+    help="Extract products from the `product` field" )
+
 args = parser.parse_args()
 
 ## LOOP ########################################################################
 
 for seq_record in SeqIO.parse(args.genbank, "genbank"):
     for feature in seq_record.features:
+
+        # get locus_tag
+        locus_tag = ""
+        for key in feature.qualifiers:
+            if key == "locus_tag":
+                locus_tag = feature.qualifiers[key][0]
+
         for key in feature.qualifiers:
 
             ## EC_NUMBER
@@ -34,9 +45,15 @@ for seq_record in SeqIO.parse(args.genbank, "genbank"):
                 for ec in feature.qualifiers[key]:
                     print(ec)
 
-            ## KEGG 
+            ## KEGG
             if key == "db_xref" and args.kegg == True:
                 for db_xref in feature.qualifiers[key]:
                     key, value = db_xref.split(":")
                     if key == "KO":
                         print(value)
+
+            ## PRODUCT
+            if key == "product" and args.product == True:
+                print(len(feature.qualifiers[key]))
+                #for product in feature.qualifiers[key]:
+                #    print(locus_tag, product, sep = "\t")

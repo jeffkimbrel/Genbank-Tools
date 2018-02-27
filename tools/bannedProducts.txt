@@ -1,0 +1,8 @@
+exact	hypothetical protein
+exact	protein of unknown function
+exact	uncharacterized conserved protein
+exact	membrane protein
+exact	secreted protein
+exact	protein of unknown function
+partial	uncharacterized protein DUF
+partial	uncharacterized protein (DUF
