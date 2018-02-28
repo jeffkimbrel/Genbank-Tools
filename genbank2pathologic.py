@@ -118,6 +118,12 @@ for seq_record in SeqIO.parse(args.genbank, "genbank"):
                 for ec in feature.qualifiers['EC_number']:
                     pathologicFileHandle.write("EC\t" + ec + "\n")
 
+            if 'db_xref' in feature.qualifiers:
+                for xref in feature.qualifiers['db_xref']:
+                    if xref.startswith("GO:"):
+                        go = xref.split(":")[1]
+                        pathologicFileHandle.write("GO\t" + go + "\n")
+
             pathologicFileHandle.write("//\n")
     pathologicFileHandle.close()
 
