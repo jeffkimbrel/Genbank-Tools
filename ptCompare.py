@@ -19,20 +19,22 @@ while counter < len(sys.argv):
 
                     if pathway in results:
                         results[pathway][fileName] = value
+                        results[pathway]['family'] = split[2]
 
                     else:
-                        results[pathway] = {fileName : value}
+                        results[pathway] = {fileName : value, 'family' : split[2]}
 
     counter += 1
 
 ## PRINT
-print("PATHWAY", end = "\t")
+print("PATHWAY\tFAMILY", end = "\t")
 for fileName in files:
     print(fileName, end = "\t")
 print()
 
 for pathway in sorted(results.keys()):
     print(pathway, end = "\t")
+    print(results[pathway]['family'], end = "\t")
     for fileName in files:
         if fileName in results[pathway]:
             print(results[pathway][fileName], end = "\t")
