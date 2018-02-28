@@ -6,6 +6,7 @@ import os
 import sys
 import argparse
 import datetime
+import tools.gb
 
 ## MISC ########################################################################
 
@@ -24,6 +25,9 @@ parser.add_argument('-o', '--out',
     required=True)
 
 args = parser.parse_args()
+
+# allowed feature types and their pathologic code gb:pf
+allowedPathologicFeatureTypes = {'CDS' : 'P', 'rRNA' : 'RRNA', 'tRNA' : 'TRNA', 'misc_RNA' : 'MISC-RNA'}
 
 ## OUTPUT PATH #################################################################
 
@@ -55,3 +59,37 @@ for seq_record in SeqIO.parse(args.genbank, "genbank"):
     geneticElementsFileHandle.write("//\n")
 
 geneticElementsFileHandle.close()
+
+## FASTA FILES #################################################################
+
+for seq_record in SeqIO.parse(args.genbank, "genbank"):
+    fastaFileHandle = open(fullOutputPath + "/" + seq_record.id + ".fsa", "w")
+    SeqIO.write(seq_record, fastaFileHandle, "fasta")
+    fastaFileHandle.close()
+
+## PATHOLOGIC FILES ############################################################
+
+for seq_record in SeqIO.parse(args.genbank, "genbank"):
+
+    pathologicFileHandle = open(fullOutputPath + "/" + seq_record.id + ".pf", "w")
+    for feature in seq_record.features:
+        if feature.type in allowedPathologicFeatureTypes:
+            pathologicFileHandle.write("ID\t" + str(feature.qualifiers['locus_tag'][0]) + "\n")
+            pathologicFileHandle.write("NAME\t" + str(feature.qualifiers['locus_tag'][0]) + "\n")
+
+            start, end, strand = tools.gb.parseLocation(feature.location)
+            pathologicFileHandle.write("STARTBASE\t" + start + "\n")
+            pathologicFileHandle.write("ENDBASE\t" + end + "\n")
+
+            if 'product' in feature.qualifiers:
+                for product in feature.qualifiers['product']:
+                    pathologicFileHandle.write("FUNCTION\t" + product + "\n")
+
+            pathologicFileHandle.write("PRODUCT-TYPE\t" + allowedPathologicFeatureTypes[feature.type] + "\n")
+
+            if 'EC_number' in feature.qualifiers:
+                for ec in feature.qualifiers['EC_number']:
+                    pathologicFileHandle.write("EC\t" + ec + "\n")
+
+            pathologicFileHandle.write("//\n")
+    pathologicFileHandle.close()

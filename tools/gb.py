@@ -1,3 +1,5 @@
+import re
+
 def incrementVersion(seqRecord, inc = True):
     if "sequence_version" in seqRecord.annotations:
         version = seqRecord.annotations["sequence_version"]
@@ -26,3 +28,19 @@ def addComment(seqRecord, newComment):
     seqRecord.annotations["comment"] = comments
 
     return(seqRecord)
+
+def parseLocation(location):
+
+    split = re.split('\[|:|\]|\(|\)', str(location))
+    strand = split[4]
+    start = ""
+    end = ""
+
+    if strand == '-':
+        start = split[2]
+        end = str(int(split[1]) + 1)
+    else:
+        start = str(int(split[1]) + 1)
+        end = split[2]
+
+    return(start, end, strand)
