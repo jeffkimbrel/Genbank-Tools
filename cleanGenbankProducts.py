@@ -37,7 +37,7 @@ for seq_record in SeqIO.parse(args.genbank, "genbank"):
     ###### Update comments and version #########################################
 
     seq_record = tools.gb.addComment(seq_record, "=====" + timestamp + "=====")
-    seq_record = tools.gb.addComment(seq_record, "program=updateGenbankAnnotations.py")
+    seq_record = tools.gb.addComment(seq_record, "program=cleanGenbankProducts.py")
     argsDict = vars(args)
     for arg in argsDict:
         seq_record = tools.gb.addComment(seq_record, (str(arg) + "=" + str(argsDict[arg])))
