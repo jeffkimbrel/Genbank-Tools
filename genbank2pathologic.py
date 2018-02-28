@@ -30,6 +30,18 @@ parser.add_argument('-t', '--taxa',
     help = "Taxa string for NCBI ID",
     required = True)
 
+parser.add_argument('-n', '--name',
+    help = "ex. Genus sp",
+    required = True)
+
+parser.add_argument('-a', '--abbreviation',
+    help = "ex. G. sp",
+    required = True)
+
+parser.add_argument('-s', '--strain',
+    help = "Ex. P2b",
+    required = True)
+
 args = parser.parse_args()
 
 # allowed feature types and their pathologic code gb:pf
@@ -132,10 +144,8 @@ writeOP("ID\t" + args.id)
 writeOP("STORAGE\tFILE")
 writeOP("SEQUENCE-SOURCE\t" + args.genbank)
 writeOP("NCBI-TAXON-ID\t" + taxaID)
-writeOP("NAME\t")
-writeOP("ABBREV-NAME\t")
-writeOP("STRAIN\t")
-
-print("*** Last three fields of organism-params.dat must be manually edited! ***")
+writeOP("NAME\t" + args.name)
+writeOP("ABBREV-NAME\t" + args.abbreviation)
+writeOP("STRAIN\t" + args.strain)
 
 organismFileHandle.close()
