@@ -42,7 +42,7 @@ for seq_record in SeqIO.parse(args.genbank, "genbank"):
     for arg in argsDict:
         seq_record = tools.gb.addComment(seq_record, (str(arg) + "=" + str(argsDict[arg])))
 
-    seq_record = tools.gb.incrementVersion(seq_record)
+    #seq_record = tools.gb.incrementVersion(seq_record)
 
     ###### Update Annotations ##################################################
 
