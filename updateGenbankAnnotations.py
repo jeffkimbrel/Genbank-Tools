@@ -49,7 +49,6 @@ for line in lines:
 
             uniqueQualifiers.append(qualifier)
 
-
             if locus in annotations:
                 if qualifier in annotations[locus]:
                     annotations[locus][qualifier].append(value)
