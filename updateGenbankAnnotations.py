@@ -23,6 +23,10 @@ parser.add_argument('-a', '--annotations',
 parser.add_argument('-o', '--out',
     help = "Output File",
     required = True)
+parser.add_argument('-m', '--mapping',
+    help = "Which genbank qualifier will the new annotations be mapped to",
+    default = 'locus_tag',
+    required = False)
 parser.add_argument('-c', '--additionalComment',
     required = False,
     default = None,
@@ -57,6 +61,7 @@ for line in lines:
 
 uniqueQualifiers = list(set(uniqueQualifiers))
 
+
 ## ADD TO GENBANK FILE #########################################################
 
 for seq_record in SeqIO.parse(args.genbank, "genbank"):
@@ -77,8 +82,8 @@ for seq_record in SeqIO.parse(args.genbank, "genbank"):
     ###### Update Annotations ##################################################
 
     for feature in seq_record.features: #iterate through features
-        if 'locus_tag' in feature.qualifiers: # does it have a locus tag
-            for locusGB in feature.qualifiers['locus_tag']: #go through locus list
+        if args.mapping in feature.qualifiers: # does it have a locus tag
+            for locusGB in feature.qualifiers[args.mapping]: # go through locus list
                 if locusGB in annotations: #is it found in the annotations
 
                     for qualifier in uniqueQualifiers:
@@ -91,6 +96,7 @@ for seq_record in SeqIO.parse(args.genbank, "genbank"):
                                     feature.qualifiers[qualifier] = tools.anno.cleanEC(feature.qualifiers[qualifier])
                                 else:
                                     feature.qualifiers[qualifier] = list(set(feature.qualifiers[qualifier]))
+
                             else:
                                 feature.qualifiers[qualifier] = annotations[locusGB][qualifier]
 
