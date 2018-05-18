@@ -48,7 +48,10 @@ for seq_record in SeqIO.parse(args.genbank, "genbank"):
             ## KEGG
             if key == "db_xref" and args.kegg == True:
                 for db_xref in feature.qualifiers[key]:
-                    key, value = db_xref.split(":")
+
+                    split = db_xref.split(":")
+                    key = split[0]
+                    value = split[1]
                     if key == "KO":
                         print(value)
 
