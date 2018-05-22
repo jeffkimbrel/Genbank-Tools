@@ -46,7 +46,7 @@ for line in lines:
 
                 ecList = re.findall(r"[0-9]+\.[0-9\-]+\.[0-9\-]+\.[0-9\-]+", function)
                 ecList = tools.anno.cleanEC(ecList)
-                print(ecList)
+                #print(ecList)
                 if len(ecList) > 0:
                     for ec in ecList:
                         print(locus_tag, "EC_number", ec, sep = "\t")
