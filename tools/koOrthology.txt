@@ -5129,15 +5129,15 @@ ko:K05491	IL17C, CX2; interleukin 17C
 ko:K05492	IL17D, IL27; interleukin 17D
 ko:K05493	IL17E, IL25; interleukin 17E
 ko:K05494	IL17F, ML1; interleukin 17F
-ko:K05495	GDF1_3; growth differentiation factor 1/3
-ko:K05496	BMP3_3B; bone morphogenetic protein 3/3B
-ko:K05497	GDF8_11; growth differentiation factor 8/11
-ko:K05498	GDF9_9B; growth differentiation factor 9/9B
+ko:K05495	GDF1; growth differentiation factor 1
+ko:K05496	BMP3; bone morphogenetic protein 3
+ko:K05497	MSTN, GDF8; growth differentiation factor 8
+ko:K05498	BMP15, GDF9B; bone morphogenetic protein 15
 ko:K05499	cytR; LacI family transcriptional regulator, repressor for deo operon, udp, cdd, tsx, nupC, and nupG
 ko:K05500	INHA; inhibin, alpha
 ko:K05501	slmA, ttk; TetR/AcrR family transcriptional regulator
 ko:K05502	BMP1, TLD; bone morphogenetic protein 1 [EC:3.4.24.19]
-ko:K05503	BMP9_10; bone morphogenetic protein 9/10
+ko:K05503	GDF2, BMP9; growth differentiation factor 2
 ko:K05504	GDF15; growth differentiation factor 15
 ko:K05505	CXCL1_2_3, GRO; C-X-C motif chemokine 1/2/3
 ko:K05506	CXCL5_6, SCYB5_6; C-X-C motif chemokine 5/6
@@ -21963,6 +21963,8 @@ ko:K22610	RSBN1, KDM9; lysine-specific demethylase 9 [EC:1.14.11.-]
 ko:K22611	SART3, TIP110; squamous cell carcinoma antigen recognized by T-cells 3
 ko:K22612	vVEGFA; poxvirus vascular endothelial growth factor A homolog
 ko:K22613	vCX3C; RSV chemokine CX3C homolog
+ko:K22614	NLRC3, NOD3; NLR family CARD domain-containing protein 3
+ko:K22615	NLRC5, NOD4; NLR family CARD domain containing 5
 ko:K22616	olsC; ornithine lipid ester-linked acyl 2-hydroxylase [EC:1.14.11.58]
 ko:K22617	olsA; lyso-ornithine lipid:acyl-ACP O-acyltransferase
 ko:K22618	olsE; ornithine lipid hydroxylase
@@ -21973,6 +21975,7 @@ ko:K22622	soxD; S-disulfanyl-L-cysteine oxidoreductase SoxD [EC:1.8.2.6]
 ko:K22623	vIL17; Herpesvirus interleukin 17
 ko:K22624	vCCL27; Poxvirus CC chemokine receptor antagonist
 ko:K22625	vIL8; Marek's disease virus interleukin 8 homolog
+ko:K22626	NLRP5; NACHT, LRR and PYD domains-containing protein 5
 ko:K22627	CXCL17; C-X-C motif chemokine 17
 ko:K22628	IL16; interleukin 16
 ko:K22629	IL27; interleukin 27
@@ -22008,11 +22011,28 @@ ko:K22658	CDH26; cadherin 26
 ko:K22659	CLSTN1; calsyntenin 1
 ko:K22660	CLSTN2; calsyntenin 2
 ko:K22661	CLSTN3; calsyntenin 3
+ko:K22662	NLRP8, NALP8; NACHT, LRR and PYD domains-containing protein 8
+ko:K22663	NLRP9, NALP9; NACHT, LRR and PYD domains-containing protein 9
+ko:K22664	NLRP11, NALP11; NACHT, LRR and PYD domains-containing protein 11
+ko:K22665	NLRP13, NALP13; NACHT, LRR and PYD domains-containing protein 13
+ko:K22666	NLRP14, NALP14; NACHT, LRR and PYD domains-containing protein 14
 ko:K22667	IL20; interleukin 20
 ko:K22668	IL24; interleukin 24
 ko:K22669	IFNL2_3, IL28; interferon lambda 2/3
+ko:K22670	BMP10; bone morphogenetic protein 10
 ko:K22671	CCL9; C-C motif chemokine 9
+ko:K22672	GDF3; growth differentiation factor 3
+ko:K22673	GDF9; growth differentiation factor 9
+ko:K22674	GDF10, BMP3B; growth differentiation factor 10
 ko:K22675	XCL2, SCM1B; C motif chemokine 2
 ko:K22676	bphB; cis-2,3-dihydrobiphenyl-2,3-diol/cis-2,3-dihydrodiol-DDE dehydrogenase [EC:1.3.1.-]
 ko:K22677	bphD; 2,6-dioxo-6-phenylhexa-3-enoate/TCOA hydrolase [EC:3.7.1.-]
 ko:K22678	dhl1; DDT-dehydrochlorinase [EC:4.5.1.1]
+ko:K22679	GDF11; growth differentiation factor 11
+ko:K22680	CLEC2A; c-type lectin domain family 2 member A
+ko:K22681	CLEC2L; c-type lectin domain family 2 member L
+ko:K22682	CLEC18; c-type lectin domain family 18
+ko:K22683	APF2; aspartyl protease family protein [EC:3.4.23.-]
+ko:K22684	MCA1; metacaspase-1 [EC:3.4.22.-]
+ko:K22685	WSS1; DNA-dependent metalloprotease WSS1 [EC:3.4.24.-]
+ko:K22686	NMA111; pro-apoptotic serine protease NMA111 [EC:3.4.21.-]
