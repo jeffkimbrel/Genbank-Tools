@@ -36,6 +36,11 @@ def parseLocation(location):
     start = ""
     end = ""
 
+    split[1] = split[1].replace("<", "")
+    split[2] = split[2].replace("<", "")
+    split[1] = split[1].replace(">", "")
+    split[2] = split[2].replace(">", "")
+
     if strand == '-':
         start = split[2]
         end = str(int(split[1]) + 1)
@@ -43,4 +48,4 @@ def parseLocation(location):
         start = str(int(split[1]) + 1)
         end = split[2]
 
-    return(start, end, strand)
+    return(int(start), int(end), strand)
