@@ -49,3 +49,6 @@ def parseLocation(location):
         end = split[2]
 
     return(int(start), int(end), strand)
+
+def fixMoleculeType(type):
+    return(type.upper())

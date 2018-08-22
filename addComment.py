@@ -1,6 +1,7 @@
 #! /usr/bin/env python
 
 from Bio import SeqIO
+from Bio.GenBank import RecordParser
 import re
 import os
 import argparse
@@ -35,6 +36,9 @@ timestamp = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 ## LOOP THROUGH GENBANK ########################################################
 
 for seq_record in SeqIO.parse(args.genbank, "genbank"):
+
+    # dna->DNA
+    seq_record.annotations['molecule_type'] = tools.gb.fixMoleculeType(seq_record.annotations['molecule_type'])
 
     ## for IMG
     seq_record.id = seq_record.description
