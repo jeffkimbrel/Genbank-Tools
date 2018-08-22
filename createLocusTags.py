@@ -18,7 +18,10 @@ parser.add_argument('-g', '--genbank',
     required = True)
 parser.add_argument('-p', '--prefix',
     help = "locus tag prefix",
-    required = True)
+    default = "lt_")
+parser.add_argument('-a', '--accession',
+    help = "Use accession instead of prefix? Overwrites -p option",
+    action = "store_true")
 parser.add_argument('-o', '--out',
     help = "output file name",
     required = True)
@@ -33,8 +36,18 @@ currentCounter = 1
 
 for seq_record in SeqIO.parse(args.genbank, "genbank"):
 
-    ## for IMG
+    locus_tag_prefix = ""
 
+    if args.accession == True:
+        locus_tag_prefix = seq_record.annotations['accessions'][0] + "_"
+        currentCounter = 1
+    else:
+        locus_tag_prefix = args.prefix
+
+    # dna->DNA
+    seq_record.annotations['molecule_type'] = tools.gb.fixMoleculeType(seq_record.annotations['molecule_type'])
+
+    ## for IMG
     seq_record.id = seq_record.description
 
     ###### Update comments and version #########################################
@@ -53,11 +66,12 @@ for seq_record in SeqIO.parse(args.genbank, "genbank"):
     for feature in seq_record.features:
         if feature.type == 'source':
             new_features.append(feature)
+        elif feature.type == 'fasta_record':
+            new_features.append(feature)
 
         else:
 
-            locusTag = ""
-            feature.qualifiers['locus_tag'] = args.prefix + str(currentCounter)
+            feature.qualifiers['locus_tag'] = locus_tag_prefix + str(currentCounter)
             currentCounter += 1
             new_features.append(feature)
 
