@@ -7,23 +7,24 @@ import argparse
 
 ## OPTIONS #####################################################################
 
-parser = argparse.ArgumentParser(description='Extract features and annotations from a genbank file using flags')
+parser = argparse.ArgumentParser(
+    description='Extract features and annotations from a genbank file using flags')
 
 parser.add_argument('-g', '--genbank',
-    help="Genbank file",
-    required=True)
+                    help="Genbank file",
+                    required=True)
 
 parser.add_argument('-e', '--ec_number',
-    action = "store_true",
-    help="Extract EC numbers from the EC_number field (does not currently get them from products or functions)" )
+                    action="store_true",
+                    help="Extract EC numbers from the EC_number field (does not currently get them from products or functions)")
 
 parser.add_argument('-k', '--kegg',
-    action = "store_true",
-    help="Extract KEGG IDs from the db_xref 'KO' field" )
+                    action="store_true",
+                    help="Extract KEGG IDs from the db_xref 'KO' field")
 
 parser.add_argument('-p', '--product',
-    action = "store_true",
-    help="Extract products from the `product` field" )
+                    action="store_true",
+                    help="Extract products from the `product` field")
 
 args = parser.parse_args()
 
@@ -40,12 +41,12 @@ for seq_record in SeqIO.parse(args.genbank, "genbank"):
 
         for key in feature.qualifiers:
 
-            ## EC_NUMBER
+            # EC_NUMBER
             if key == "EC_number" and args.ec_number == True:
                 for ec in feature.qualifiers[key]:
-                    print(ec)
+                    print(locus_tag, ec, sep="\t")
 
-            ## KEGG
+            # KEGG
             if key == "db_xref" and args.kegg == True:
                 for db_xref in feature.qualifiers[key]:
 
@@ -55,8 +56,8 @@ for seq_record in SeqIO.parse(args.genbank, "genbank"):
                     if key == "KO":
                         print(value)
 
-            ## PRODUCT
+            # PRODUCT
             if key == "product" and args.product == True:
                 print(len(feature.qualifiers[key]))
-                #for product in feature.qualifiers[key]:
+                # for product in feature.qualifiers[key]:
                 #    print(locus_tag, product, sep = "\t")
