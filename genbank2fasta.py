@@ -26,6 +26,11 @@ parser.add_argument('-n', '--nucleo',
                     help="Write nucleic acid fasta file",
                     required=False)
 
+parser.add_argument('-c', '--contig',
+                    default=None,
+                    help="Write contig fasta file",
+                    required=False)
+
 args = parser.parse_args()
 
 if args.amino != None:
@@ -34,9 +39,16 @@ if args.amino != None:
 if args.nucleo != None:
     nt_file = open(args.nucleo, 'w')
 
+if args.contig != None:
+    ct_file = open(args.contig, 'w')
+
 ## LOOP ########################################################################
 
 for seq_record in SeqIO.parse(args.genbank, "genbank"):
+    if args.contig != None:
+        ct = str(seq_record.seq)
+        ct_file.write(">" + seq_record.name + "\n" + ct + "\n")
+
     for feature in seq_record.features:
         if feature.type == 'CDS':
             id = feature.qualifiers[args.identifier][0]

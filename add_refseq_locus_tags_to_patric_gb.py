@@ -41,6 +41,7 @@ def make_mapping():
             map[m] = map[m].split(":")[1]
         else:
             map[m] = m
+
     return(map)
 
 

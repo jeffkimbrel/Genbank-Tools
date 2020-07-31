@@ -9,22 +9,22 @@ import tools.gb
 
 ## OPTIONS #####################################################################
 
-parser = argparse.ArgumentParser(description = 'XXX')
+parser = argparse.ArgumentParser(description='XXX')
 
 ########## Required ############################################################
 
 parser.add_argument('-g', '--genbank',
-    help = "Genbank file to update",
-    required = True)
+                    help="Genbank file to update",
+                    required=True)
 parser.add_argument('-p', '--prefix',
-    help = "locus tag prefix",
-    default = "lt_")
+                    help="locus tag prefix",
+                    default="lt_")
 parser.add_argument('-a', '--accession',
-    help = "Use accession instead of prefix? Overwrites -p option",
-    action = "store_true")
+                    help="Use accession instead of prefix? Overwrites -p option",
+                    action="store_true")
 parser.add_argument('-o', '--out',
-    help = "output file name",
-    required = True)
+                    help="output file name",
+                    required=True)
 args = parser.parse_args()
 
 ## MISC ########################################################################
@@ -45,9 +45,9 @@ for seq_record in SeqIO.parse(args.genbank, "genbank"):
         locus_tag_prefix = args.prefix
 
     # dna->DNA
-    seq_record.annotations['molecule_type'] = tools.gb.fixMoleculeType(seq_record.annotations['molecule_type'])
+    #seq_record.annotations['molecule_type'] = tools.gb.fixMoleculeType(seq_record.annotations['molecule_type'])
 
-    ## for IMG
+    # for IMG
     seq_record.id = seq_record.description
 
     ###### Update comments and version #########################################
@@ -58,7 +58,7 @@ for seq_record in SeqIO.parse(args.genbank, "genbank"):
     for arg in argsDict:
         seq_record = tools.gb.addComment(seq_record, (str(arg) + "=" + str(argsDict[arg])))
 
-    seq_record = tools.gb.incrementVersion(seq_record, inc = True)
+    seq_record = tools.gb.incrementVersion(seq_record, inc=True)
 
     ###### Standardize #########################################################
 
